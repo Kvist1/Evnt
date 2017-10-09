@@ -35,21 +35,18 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    private android.support.v7.widget.Toolbar mActionBarToolbar;
+    private Toolbar mActionBarToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getIntent() != null) {
-//            String roomId = getIntent().getStringExtra(getString(R.string.key_room_id));
-//            mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
-//            setSupportActionBar(mActionBarToolbar);
-//            this.setTitle(roomId);
-//            getSupportActionBar().setTitle(roomId);
-        }
-
         setContentView(R.layout.activity_main);
+        if (getIntent() != null) {
+            String roomId = getIntent().getStringExtra(getString(R.string.key_room_id));
+            mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(mActionBarToolbar);
+            mActionBarToolbar.setTitle(roomId);
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
