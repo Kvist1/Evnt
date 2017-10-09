@@ -27,9 +27,9 @@ public class StartActivity extends AppCompatActivity {
         chat.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String value = dataSnapshot.getValue(String.class);
+                String value = dataSnapshot.toString();
                 if (value != null){
-                    Log.i("VALUE: ", value);
+                    Log.i("VALUES: ", value);
                 }
             }
 
