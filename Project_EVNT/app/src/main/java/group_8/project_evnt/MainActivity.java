@@ -35,10 +35,20 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private android.support.v7.widget.Toolbar mActionBarToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getIntent() != null) {
+//            String roomId = getIntent().getStringExtra(getString(R.string.key_room_id));
+//            mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
+//            setSupportActionBar(mActionBarToolbar);
+//            this.setTitle(roomId);
+//            getSupportActionBar().setTitle(roomId);
+        }
+
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -137,6 +147,9 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
+            if(position == 1) {
+                return ChatFragment.newInstance("1","2");
+            }
             return PlaceholderFragment.newInstance(position + 1);
         }
 
