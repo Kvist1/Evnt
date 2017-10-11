@@ -36,16 +36,17 @@ public class MainActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
     private Toolbar mActionBarToolbar;
+    private String currentRoomId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (getIntent() != null) {
-            String roomId = getIntent().getStringExtra(getString(R.string.key_room_id));
+            currentRoomId = getIntent().getStringExtra(getString(R.string.key_room_id));
             mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(mActionBarToolbar);
-            mActionBarToolbar.setTitle(roomId);
+            mActionBarToolbar.setTitle(currentRoomId);
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -136,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             if(position == 0) {
-                return ChatFragment.newInstance("1","2");
+                return ChatFragment.newInstance(currentRoomId);
             } else if (position == 1) {
                 return PollFragment.newInstance();
             }
