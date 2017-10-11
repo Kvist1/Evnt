@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:id="@+id/rv_chat_message"
         ></android.support.v7.widget.RecyclerView>
 
     <LinearLayout
@@ -25,17 +26,19 @@
         android:layout_gravity="center_vertical"
         >
         <EditText
+            android:id="@+id/et_message_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="Your comments, answers, suggestions"
             />
         <ImageButton
-            android:id="@+id/sharepic"
+            android:id="@+id/button_send_message"
             android:layout_width="60dp"
             android:layout_height="match_parent"
             android:layout_weight="0"
             android:src="@drawable/ic_paper_plane"
+            android:onClick="onSendMessage"
             />
 
 
