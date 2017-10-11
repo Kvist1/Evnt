@@ -20,6 +20,16 @@ public class Database {
     private Database() {
     }
 
+    public DatabaseReference rooms(){
+        return database.getReference().child("rooms");
+    }
+
+    public String createRoom(){
+        String roomId = rooms().push().getKey();
+        rooms().child(roomId).setValue(true);
+        return roomId;
+    }
+
     public DatabaseReference chat(String roomId){
         return database.getReference().child("chats").child(roomId);
     }

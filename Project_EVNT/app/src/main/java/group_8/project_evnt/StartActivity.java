@@ -42,6 +42,10 @@ public class StartActivity extends AppCompatActivity {
         });
 
         Database.getInstance().writeChatMessage("MY_NEW_ROOM_ID", "Felix Franzén", "This is my new message");
+        String newRoomId = Database.getInstance().createRoom();
+        Log.i("THE NEW ROOM ID: ", newRoomId);
+        Database.getInstance().writeChatMessage(newRoomId, "Felix Franzén", "This is my new message");
+
     }
 
     public void onCreateButtonClick(View view) {
