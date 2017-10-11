@@ -5,25 +5,42 @@
     android:layout_height="match_parent"
     tools:context="group_8.project_evnt.StartActivity"
     android:orientation="vertical"
-    android:padding="30dp">
+    android:padding="30dp"
+    android:background="@drawable/gradient">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/EVNT_logo"
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Evnt"
-        android:textAlignment="center"
-        android:textSize="30dp"/>
+        android:text="ENTER ROOM ID:"
+        android:textColor="@android:color/white"
+        android:textSize="18dp"
+        android:layout_marginTop="30dp"
+        android:textAlignment="center"/>
 
     <EditText
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="120dp"
+        android:background="@drawable/editTextBox"/>
+
+    <view
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="30dp"
+        android:background="@android:color/white"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Create a room"
+        android:background="@drawable/createButton"
         android:onClick="onCreateButtonClick"
         />
 
