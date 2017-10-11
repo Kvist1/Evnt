@@ -11,7 +11,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/EVNT_logo"
+        android:src="@drawable/evnt_logo"
         android:scaleType="centerCrop"/>
 
     <TextView
@@ -27,7 +27,7 @@
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:background="@drawable/editTextBox"/>
+        android:background="@drawable/edit_text_box"/>
 
     <view
         android:layout_width="match_parent"
@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/createButton"
+        android:background="@drawable/create_button"
         android:onClick="onCreateButtonClick"
         />
 
