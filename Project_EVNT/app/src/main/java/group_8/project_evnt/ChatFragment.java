@@ -42,6 +42,9 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
     private ImageButton mSendMessageButton;
     private EditText mMessageInputEditText;
 
+    private LinearLayoutManager mLinearLayoutManager;
+    private ChatMessageAdapter mChatMessageAdapter;
+
     public ChatFragment() {
         // Required empty public constructor
     }
@@ -64,11 +67,6 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // dummy
-        ChatMessage c1 = new ChatMessage("1", "Hello, World");
-        ChatMessage c2 = new ChatMessage("2", "Hi :D");
-        chatMessages.add(c1);
-        chatMessages.add(c2);
 
         if (getArguments() != null) {
             currentRoomId = getArguments().getString(ARG_ROOM_ID);
@@ -80,8 +78,16 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
         chat.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                chatMessages.clear();
                 for (DataSnapshot message : dataSnapshot.getChildren()){
+                    Log.d("Data", message.toString());
                     chatMessages.add(message.getValue(ChatMessage.class));
+                }
+                if(mChatMessageAdapter != null) {
+                    mChatMessageAdapter.notifyDataSetChanged();
+                }
+                if(mLinearLayoutManager != null) {
+                    mLinearLayoutManager.scrollToPosition(chatMessages.size() - 1);
                 }
             }
 
@@ -110,11 +116,12 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup adapter
         // Create adapter passing in the sample user data
-        ChatMessageAdapter adapter = new ChatMessageAdapter(this.getActivity(), chatMessages);
+        mChatMessageAdapter = new ChatMessageAdapter(this.getActivity(), chatMessages);
         // Attach the adapter to the recyclerview to populate items
-        mChatMessageRecycleView.setAdapter(adapter);
+        mChatMessageRecycleView.setAdapter(mChatMessageAdapter);
         // Set layout manager to position the items
-        mChatMessageRecycleView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        mLinearLayoutManager = new LinearLayoutManager(this.getActivity());
+        mChatMessageRecycleView.setLayoutManager(mLinearLayoutManager);
 
     }
 
