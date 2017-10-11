@@ -23,12 +23,14 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        DatabaseReference chat = Database.getInstance().chat();
+        DatabaseReference chat = Database.getInstance().chat("MY_NEW_ROOM_ID");
         chat.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.toString();
+
                 if (value != null){
+                    Log.i("LENGTH: ", String.valueOf(dataSnapshot.getChildrenCount()));
                     Log.i("VALUES: ", value);
                 }
             }
@@ -38,6 +40,8 @@ public class StartActivity extends AppCompatActivity {
 
             }
         });
+
+        Database.getInstance().writeChatMessage("MY_NEW_ROOM_ID", "Felix Franzén", "This is my new message");
     }
 
     public void onCreateButtonClick(View view) {

@@ -8,22 +8,22 @@ import java.security.Timestamp;
 
 public class ChatMessage {
 
-    private String author;
+    private String userId;
     private String message;
-    private Timestamp time;
+    private long time;
 
-    public ChatMessage(String auth, String msg){
-        author = auth;
+    public ChatMessage(String usrId, String msg){
+        userId = usrId;
         message = msg;
-        time = null;
+        time = System.currentTimeMillis();
     }
 
-    public String getAuthor() {
-        return author;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getMessage() {
@@ -34,11 +34,11 @@ public class ChatMessage {
         this.message = message;
     }
 
-    public Timestamp getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(Timestamp time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
