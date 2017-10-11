@@ -62,7 +62,8 @@ public class ChatFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        DatabaseReference chat = Database.getInstance().chat();
+        // temp room id, remove later
+        DatabaseReference chat = Database.getInstance().chat("MY_NEW_ROOM_ID");
         chat.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

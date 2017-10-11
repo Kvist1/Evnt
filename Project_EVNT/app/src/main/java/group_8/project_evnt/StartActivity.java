@@ -7,6 +7,8 @@ import android.view.View;
 
 import java.util.Random;
 
+import group_8.project_evnt.core.Database;
+
 public class StartActivity extends AppCompatActivity {
 
     @Override
@@ -16,13 +18,8 @@ public class StartActivity extends AppCompatActivity {
     }
 
     public void onCreateButtonClick(View view) {
-        // TODO: Call to firebae to create a room and get the room id
-        Random random = new Random();
-        // generate a random integer from 0 to 999
-        Integer x = random.nextInt(999);
-        String roomId = x.toString();
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(getString(R.string.key_room_id), roomId);
+        intent.putExtra(getString(R.string.key_room_id), Database.getInstance().createRoom());
         startActivity(intent);
     }
 
