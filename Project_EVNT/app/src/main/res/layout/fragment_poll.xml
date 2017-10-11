@@ -1,21 +1,37 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_poll_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="group_8.project_evnt.PollFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/hello_blank_fragment" />
 
-    <Button
-        android:id="@+id/new_poll_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="NEW POLL"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/linear_layout_container"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/new_poll_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NEW POLL"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"/>
+
+        </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>
