@@ -12,6 +12,10 @@ public class ChatMessage {
     private String message;
     private long time;
 
+    public ChatMessage(){
+        // empty constructor for firebase
+    }
+
     public ChatMessage(String usrId, String msg){
         userId = usrId;
         message = msg;
