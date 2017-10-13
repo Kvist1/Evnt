@@ -17,7 +17,8 @@
             android:layout_height="wrap_content"
             android:inputType="text"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginRight="10dp"
+            android:hint="Title"/>
 
         <EditText
             android:id="@+id/text_input_question"
@@ -25,7 +26,8 @@
             android:layout_height="wrap_content"
             android:inputType="text"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginRight="10dp"
+            android:hint="Ask a question"/>
 
         <Button
             android:id="@+id/add_alternative"
