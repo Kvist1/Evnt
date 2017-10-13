@@ -49,7 +49,6 @@ public class PollFragment extends Fragment {
 
         newPollFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-//               
                 // Begin the transaction
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 // Replace the contents of the container with the new fragment
