@@ -42,25 +42,13 @@ public class PollFragment extends Fragment {
 
         final View rootView = inflater.inflate(R.layout.fragment_poll, container, false);
 
-        Button newPollButton = (Button) rootView.findViewById(R.id.new_poll_button);
 
+        FloatingActionButton newPollFab = (FloatingActionButton) rootView.findViewById(R.id.new_poll_fab);
         final LinearLayout l1 = (LinearLayout) rootView.findViewById(R.id.linear_layout_container);
 
-        newPollButton.setOnClickListener(new View.OnClickListener() {
+        newPollFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-//                Button button = new Button(getActivity());
-//                button.setText("POLL");
-//
-//                LinearLayout.LayoutParams params =
-//                        new LinearLayout.LayoutParams(
-//                                ViewGroup.LayoutParams.MATCH_PARENT,
-//                                ViewGroup.LayoutParams.WRAP_CONTENT);
-//                button.setLayoutParams(params);
-//                button.setGravity(Gravity.CENTER_HORIZONTAL);
-//                button.setTextSize(32);
-
-                // l1.addView(button);
-
+//               
                 // Begin the transaction
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 // Replace the contents of the container with the new fragment

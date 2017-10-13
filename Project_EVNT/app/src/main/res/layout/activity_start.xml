@@ -24,11 +24,15 @@
         android:textAlignment="center"/>
 
     <EditText
+        android:id="@+id/room_id"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:inputType="numberPassword"
-        android:textScaleX="3"
+        android:textSize="40dp"
+        android:cursorVisible="false"
+        android:textAlignment="center"
+        android:maxLength="4"
         android:background="@drawable/edit_text_box"/>
 
     <View
