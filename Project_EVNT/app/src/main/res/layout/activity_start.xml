@@ -27,6 +27,8 @@
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="120dp"
+        android:inputType="numberPassword"
+        android:textScaleX="3"
         android:background="@drawable/edit_text_box"/>
 
     <View
