@@ -65,14 +65,15 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            currentPollId = getArguments().getString(ARG_POLL_ID);
-        } else {
-            return;
-        }
+        // TODO: Connect to database
+//        if (getArguments() != null) {
+//            currentPollId = getArguments().getString(ARG_POLL_ID);
+//        } else {
+//            return;
+//        }
 
         pollAlternatives.add(new PollAlternative());
-        mAddAlternativeAdapter.notifyDataSetChanged();
+        //mAddAlternativeAdapter.notifyDataSetChanged();
 
 //        DatabaseReference poll = Database.getInstance().poll(currentPollId);
 //        poll.addValueEventListener(new ValueEventListener() {
