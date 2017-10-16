@@ -74,6 +74,7 @@ public class AddAltFragment extends Fragment {
                     return false;
                 if(keyCode == KeyEvent.KEYCODE_ENTER ){
                     Log.d("STATE", "Enter button clicked");
+
                     return true;
                 }
                 return false;

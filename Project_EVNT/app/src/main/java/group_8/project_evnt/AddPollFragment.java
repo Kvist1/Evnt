@@ -12,7 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 
 /**
@@ -67,14 +71,12 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_poll, container, false);
 
-        // Begin the transaction
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        // Replace the contents of the container with the new fragment
-        ft.add(R.id.linear_layout_container, new AddAltFragment());
-        // Complete the changes added above
-        ft.commit();
-
-        // TODO: Fix so that the card wraps the EditText 'alternative'
+//        // Begin the transaction
+//        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+//        // Replace the contents of the container with the new fragment
+//        ft.replace(R.id.linear_layout_container, new AddAltFragment());
+//        // Complete the changes added above
+//        ft.commit();
 
         return view;
     }

@@ -1,35 +1,36 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="group_8.project_evnt.AddPollFragment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/linear_layout_container"
+    android:orientation="vertical"
     android:background="@drawable/card_rounded_shape"
     android:layout_margin="16dp">
 
-    <LinearLayout
-        android:id="@+id/linear_layout_container"
+    <EditText
+        android:id="@+id/text_input_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:inputType="text"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="Title"/>
 
-        <EditText
-            android:id="@+id/text_input_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:hint="Title"/>
+    <EditText
+        android:id="@+id/text_input_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="Ask a question"/>
 
-        <EditText
-            android:id="@+id/text_input_question"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:hint="Ask a question"/>
-
+    <ListView
+        android:name="group_8.project_evnt.AddAltFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
 
         <!--<LinearLayout-->
             <!--android:layout_width="match_parent"-->
@@ -54,7 +55,9 @@
                 <!--android:background="@android:color/transparent">-->
             <!--</EditText>-->
         <!--</LinearLayout>-->
-
-
-    </LinearLayout>
-</FrameLayout>
+    <!--<FrameLayout-->
+        <!--android:id="@+id/fragment_holder"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+    <!--</FrameLayout>-->
+</LinearLayout>
