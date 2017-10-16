@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private Toolbar mActionBarToolbar;
     private String currentRoomId;
+    private String currentRoomCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +46,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         if (getIntent() != null) {
             currentRoomId = getIntent().getStringExtra(getString(R.string.key_room_id));
+            Log.d("ROOMID", currentRoomId);
+            currentRoomCode = getIntent().getStringExtra(getString(R.string.key_room_code));
             mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(mActionBarToolbar);
-            mActionBarToolbar.setTitle(currentRoomId);
+            mActionBarToolbar.setTitle(currentRoomCode);
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
