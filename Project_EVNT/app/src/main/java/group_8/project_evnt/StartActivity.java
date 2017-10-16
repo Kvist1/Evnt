@@ -42,7 +42,7 @@ public class StartActivity extends AppCompatActivity {
                     public void onRoomRetrieved(Room room) {
                         progressBarHolder.setVisibility(View.GONE);
                         if(room != null) {
-                            Log.d("ROOM", room.getRoomId());
+                            Log.d("ROOM", room.getRoomCode());
                             goToRoom(room);
                         } else {
 
