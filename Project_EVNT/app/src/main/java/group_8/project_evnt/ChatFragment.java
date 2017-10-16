@@ -155,10 +155,9 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
                     return;
                 }
 
-                Database.getInstance().writeChatMessage(currentRoomId, "111", msg);
+                Database.getInstance().writeChatMessage(currentRoomId, "111", msg, false);
 
                 mMessageInputEditText.setText("");
-//                mMessageInputEditText.clearFocus();
                 break;
         }
     }
@@ -167,6 +166,9 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
     // Note that we specify the custom ViewHolder which gives us access to our views
     public class ChatMessageAdapter extends
             RecyclerView.Adapter<ChatMessageAdapter.ViewHolder> {
+
+        private static final int ITEM_TYPE_NORMAL = 0;
+        private static final int ITEM_TYPE_CREATOR = 1;
 
         private ArrayList<ChatMessage> mChatMessages;
         private Context mContext;
@@ -189,8 +191,6 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
             // for any view that will be set as you render a row
             public TextView mMessageTextView;
             public TextView mTimeStampTextView;
-            public TextView mSenderTextView;
-            public TextView mYouOrOtherTextView;
 
             // We also create a constructor that accepts the entire item row
             // and does the view lookups to find each subview
@@ -201,21 +201,35 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
 
                 mMessageTextView = (TextView) itemView.findViewById(R.id.tv_message);
                 mTimeStampTextView = (TextView) itemView.findViewById(R.id.tv_timestamp);
-//                mSenderTextView = (TextView) itemView.findViewById(R.id.tv_sender);
-//                mYouOrOtherTextView = (TextView) itemView.findViewById(R.id.tv_you_or_other);
+            }
+        }
+
+        public int getItemViewType(int position) {
+            if (mChatMessages.get(position).isCreator()) {
+                return ITEM_TYPE_CREATOR;
+            } else {
+                return ITEM_TYPE_NORMAL;
             }
         }
 
         @Override
         public ChatMessageAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            Log.i("VIEW TYPE: ", String.valueOf(viewType));
             Context context = parent.getContext();
             LayoutInflater inflater = LayoutInflater.from(context);
 
             // Inflate the custom layout
-            View yourMessageView = inflater.inflate(R.layout.chat_your_message_item, parent, false);
+            View messageView;
+
+            switch (viewType){
+                case 0: messageView = inflater.inflate(R.layout.chat_your_message_item, parent, false); break;
+                case 1: messageView = inflater.inflate(R.layout.chat_lecturer_message_item, parent, false); break;
+                default: messageView = inflater.inflate(R.layout.chat_your_message_item, parent, false); break;
+
+            }
 
             // Return a new holder instance
-            ViewHolder viewHolder = new ViewHolder(yourMessageView);
+            ViewHolder viewHolder = new ViewHolder(messageView);
             return viewHolder;
         }
 
@@ -242,6 +256,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
         public int getItemCount() {
             return mChatMessages.size();
         }
+
     }
 
 }

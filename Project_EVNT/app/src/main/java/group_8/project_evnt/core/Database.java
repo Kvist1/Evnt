@@ -88,8 +88,8 @@ public class Database {
         return database.getReference().child("chats").child(roomId);
     }
 
-    public DatabaseReference writeChatMessage(String roomId, String userId, String message){
-        ChatMessage newMessage = new ChatMessage(userId, message);
+    public DatabaseReference writeChatMessage(String roomId, String userId, String message, boolean isCreator){
+        ChatMessage newMessage = new ChatMessage(userId, message, isCreator);
 
         DatabaseReference chatReference = database.getReference().child("chats").child(roomId);
         String msgKey = chatReference.push().getKey();

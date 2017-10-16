@@ -35,19 +35,4 @@
             android:textSize="10dp" />
     </LinearLayout>
 
-    
-    <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/tv_sender"-->
-        <!--android:text="Sender"-->
-        <!--/>-->
-    
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/tv_you_or_other"-->
-        <!--android:text="You or others"-->
-        <!--/>-->
-
 </LinearLayout>
