@@ -15,7 +15,7 @@
 
     <EditText
         android:id="@+id/add_alternative"
-        android:hint="Add alternative"
+        android:hint="Add alternative ..."
         android:layout_height="match_parent"
         android:layout_width="wrap_content"
         android:layout_marginTop="4dp"
