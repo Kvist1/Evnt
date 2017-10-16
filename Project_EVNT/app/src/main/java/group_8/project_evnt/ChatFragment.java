@@ -131,6 +131,10 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
             // when sending new message
             case R.id.button_send_message:
                 String msg = mMessageInputEditText.getText().toString();
+                if(msg.isEmpty()) {
+                    return;
+                }
+
                 Database.getInstance().writeChatMessage(currentRoomId, "111", msg);
 
                 mMessageInputEditText.setText("");
