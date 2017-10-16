@@ -3,7 +3,6 @@ package group_8.project_evnt;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,8 +19,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 import group_8.project_evnt.core.Database;
 import group_8.project_evnt.models.ChatMessage;
@@ -168,6 +168,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
             // Your holder should contain a member variable
             // for any view that will be set as you render a row
             public TextView mMessageTextView;
+            public TextView mTimeStampTextView;
             public TextView mSenderTextView;
             public TextView mYouOrOtherTextView;
 
@@ -179,6 +180,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
                 super(itemView);
 
                 mMessageTextView = (TextView) itemView.findViewById(R.id.tv_message);
+                mTimeStampTextView = (TextView) itemView.findViewById(R.id.tv_timestamp);
 //                mSenderTextView = (TextView) itemView.findViewById(R.id.tv_sender);
 //                mYouOrOtherTextView = (TextView) itemView.findViewById(R.id.tv_you_or_other);
             }
@@ -206,6 +208,13 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
             // Set item views based on your views and data model
             TextView message = viewHolder.mMessageTextView;
             message.setText(chatMessage.getMessage());
+
+            // Format and set the chat message timestamp
+            TextView time = viewHolder.mTimeStampTextView;
+            long ms = chatMessage.getTime();
+            Date date = new Date(ms);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+            time.setText(dateFormat.format(date));
 
         }
 

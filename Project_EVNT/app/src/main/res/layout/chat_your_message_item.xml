@@ -27,12 +27,12 @@
             />
 
         <TextView
+            android:id="@+id/tv_timestamp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="5dp"
             android:alpha="0.5"
-            android:textSize="10dp"
-            android:text="12:08"/>
+            android:textSize="10dp" />
     </LinearLayout>
 
     
