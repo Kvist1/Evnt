@@ -42,12 +42,19 @@ public class Database {
     public void findRoom(String roomCode, final CreateRoomCallbackInterface callback) {
         DatabaseReference roomRef = rooms();
 
-        roomRef.orderByChild("roomCode").equalTo(roomCode).addListenerForSingleValueEvent(new ValueEventListener() {
+        roomRef.orderByChild("roomCode").equalTo(roomCode).limitToFirst(1).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()!= null) {
-                    Log.d("SNAPSHOT", dataSnapshot.getValue().toString());
-                    callback.onRoomRetrieved(dataSnapshot.getValue(Room.class));
+                Log.d("ROOM_", "Should be call only once");
+                if(dataSnapshot.getValue() != null) {
+                    Room firstRoom = null;
+                    for(DataSnapshot room : dataSnapshot.getChildren() ){
+                        firstRoom = room.getValue(Room.class);
+                        if (firstRoom.getRoomId()!= null) {
+                            break;
+                        }
+                    }
+                    callback.onRoomRetrieved(firstRoom);
                 } else {
                     callback.onRoomRetrieved(null);
                 }

@@ -5,10 +5,10 @@ package group_8.project_evnt.models;
  */
 
 public class Room {
-    private String roomId;
-    private String roomCode;
-    private long time;
-    private String creator;
+    public String roomId;
+    public String roomCode;
+    public long time;
+    public String creator;
 
     public Room(){
         // empty constructor for firebase
