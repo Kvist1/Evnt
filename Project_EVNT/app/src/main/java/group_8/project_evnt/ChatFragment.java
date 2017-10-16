@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -108,6 +110,24 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
         //set onClick listener
         mSendMessageButton.setOnClickListener(this);
         mMessageInputEditText = view.findViewById(R.id.et_message_input);
+
+        mMessageInputEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+                if (charSequence.length() != 0){
+                    mSendMessageButton.setAlpha(new Float(1));
+                } else {
+                    mSendMessageButton.setAlpha(new Float(0.25));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
 
         return view;
     }
