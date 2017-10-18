@@ -42,6 +42,23 @@ public class Database {
         return database.getReference().child("rooms");
     }
 
+    public void findRoomById(String roomId, final CreateRoomCallbackInterface callback) {
+        DatabaseReference roomRef = rooms();
+        roomRef.child(roomId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() != null) {
+                    callback.onRoomRetrieved(dataSnapshot.getValue(Room.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.i("FAILED: ", "to retrieve room");
+            }
+        });
+    }
+
     public void findRoom(String roomCode, final CreateRoomCallbackInterface callback) {
         DatabaseReference roomRef = rooms();
 
@@ -70,7 +87,7 @@ public class Database {
         });
     }
 
-    public void createRoom(final Context context, final CreateRoomCallbackInterface callback ){
+    public void createRoom(final String userId, final CreateRoomCallbackInterface callback ){
         DatabaseReference roomRef = rooms();
 
         // Attach a listener to read the data at our posts reference
@@ -80,7 +97,7 @@ public class Database {
                 long code = dataSnapshot.getChildrenCount() + 1;
                 String roomCode = String.format("%03d", code);
                 String roomId = rooms().push().getKey();
-                Room room = new Room(roomId, roomCode, AppUtils.getDeviceId(context));
+                Room room = new Room(roomId, roomCode, userId);
                 rooms().child(roomId).setValue(room);
 
                 //

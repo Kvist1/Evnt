@@ -68,7 +68,7 @@ public class StartActivity extends AppCompatActivity {
 
     public void onCreateButtonClick(View view) {
         progressBarHolder.setVisibility(View.VISIBLE);
-        Database.getInstance().createRoom(this, new Database.CreateRoomCallbackInterface() {
+        Database.getInstance().createRoom(AppUtils.getDeviceId(this), new Database.CreateRoomCallbackInterface() {
             public void onRoomRetrieved(Room room) {
                 progressBarHolder.setVisibility(View.GONE);
                 goToRoom(room);
