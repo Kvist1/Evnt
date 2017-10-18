@@ -6,4 +6,7 @@
     <color name="colorBackground">#FAFAFA</color>
 
     <color name="mainCardColor">#FFFFFF</color>
+
+    <color name="textBlack">#000000</color>
+    <color name="textGray">#777777</color>
 </resources>

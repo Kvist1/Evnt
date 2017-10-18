@@ -10,14 +10,17 @@ public class Poll {
     private String title;
     private String question;
     private boolean isLive;
+    private boolean isEnd;
+    private String creator;
     private ArrayList<PollAnswer> pollAnwsers;
 
     public Poll() {
     }
 
-    public Poll(String title, String question, ArrayList<PollAnswer> pollAnwsers, boolean isLive) {
+    public Poll(String title, String question, String creator, ArrayList<PollAnswer> pollAnwsers, boolean isLive) {
         this.title = title;
         this.question = question;
+        this.creator = creator;
         this.pollAnwsers = pollAnwsers;
         this.isLive = isLive;
     }
@@ -52,5 +55,21 @@ public class Poll {
 
     public void setLive(boolean live) {
         isLive = live;
+    }
+
+    public boolean isEnd() {
+        return isEnd;
+    }
+
+    public void setEnd(boolean end) {
+        isEnd = end;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 }

@@ -15,6 +15,7 @@ public class PollAnswer {
 
     public PollAnswer(String answer) {
         this.answer = answer;
+        this.voters = new ArrayList<String>();
     }
 
     public PollAnswer(String answer, ArrayList<String> voters) {
