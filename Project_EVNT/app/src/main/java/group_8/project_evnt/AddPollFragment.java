@@ -2,7 +2,6 @@ package group_8.project_evnt;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,9 +9,6 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -20,21 +16,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import group_8.project_evnt.core.Database;
-import group_8.project_evnt.models.ChatMessage;
-import group_8.project_evnt.models.PollAlternative;
-import group_8.project_evnt.models.Room;
+import group_8.project_evnt.models.PollAnswer;
 import group_8.project_evnt.utils.AppUtils;
 
 
@@ -45,9 +33,11 @@ import group_8.project_evnt.utils.AppUtils;
  */
 public class AddPollFragment extends Fragment implements View.OnClickListener {
 
+    private static final String ARG_ROOM_ID = "roomid";
     private static final String ARG_POLL_ID = "pollid";
-    private String currentPollId;
-    private ArrayList<PollAlternative> pollAlternatives = new ArrayList<>();
+
+    private String currentRoomId;
+    private ArrayList<PollAnswer> pollAnswers = new ArrayList<>();
 
     private RecyclerView mPollAlternativeRecycleView;
     private ImageButton menuButton;
@@ -81,30 +71,30 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // TODO: Connect to database
-//        if (getArguments() != null) {
-//            currentPollId = getArguments().getString(ARG_POLL_ID);
-//        } else {
-//            return;
-//        }
+        if (getArguments() != null) {
+            currentRoomId = getArguments().getString(ARG_ROOM_ID);
+        } else {
+            return;
+        }
 
-        pollAlternatives.add(new PollAlternative());
+
+        pollAnswers.add(new PollAnswer());
         //mAddAlternativeAdapter.notifyDataSetChanged();
 
 //        DatabaseReference poll = Database.getInstance().poll(currentPollId);
 //        poll.addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(DataSnapshot dataSnapshot) {
-//                pollAlternatives.clear();
+//                pollAnswers.clear();
 //                for (DataSnapshot alternative : dataSnapshot.getChildren()){
 //                    Log.d("Data", alternative.toString());
-//                    pollAlternatives.add(alternative.getValue(PollAlternative.class));
+//                    pollAnswers.add(alternative.getValue(PollAlternative.class));
 //                }
 //                if(mAddAlternativeAdapter != null) {
 //                    mAddAlternativeAdapter.notifyDataSetChanged();
 //                }
 //                if(mLinearLayoutManager != null) {
-//                    mLinearLayoutManager.scrollToPosition(pollAlternatives.size() - 1);
+//                    mLinearLayoutManager.scrollToPosition(pollAnswers.size() - 1);
 //                }
 //            }
 //
@@ -139,7 +129,7 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup adapter
         // Create adapter passing in the sample user data
-        mAddAlternativeAdapter = new AddAlternativeAdapter(this.getActivity(), pollAlternatives);
+        mAddAlternativeAdapter = new AddAlternativeAdapter(this.getActivity(), pollAnswers);
         // Attach the adapter to the recyclerview to populate items
         mPollAlternativeRecycleView.setAdapter(mAddAlternativeAdapter);
         // Set layout manager to position the items
@@ -179,7 +169,7 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
         }
         else if (etQuestion.getText().toString().equals("")) {
             toast = Toast.makeText(getContext(), "Enter a question", Toast.LENGTH_SHORT);
-        } else if (pollAlternatives.size() < 3) {
+        } else if (pollAnswers.size() < 3) {
             toast = Toast.makeText(getContext(), "Enter at least two alternatives", Toast.LENGTH_SHORT);
         } else {
             // if successful
@@ -187,13 +177,20 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
             // change the button to withdraw
             publishButton.setText("WITHDRAW");
             publishButton.setBackgroundColor(Color.RED);
+
+            // save the poll and send to server
+            final Database db = Database.getInstance();
+
+            final String title = etTitle.getText().toString();
+            final String question = etQuestion.getText().toString();
+            final String userId = AppUtils.getDeviceId(getContext());
+            db.createPoll(currentRoomId, title, question, userId, pollAnswers, true);
         }
 
         if (toast != null)
             toast.show();
 
 
-        // save the poll and send to server
 
 
     }
@@ -203,12 +200,12 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
     public class AddAlternativeAdapter extends
             RecyclerView.Adapter<AddAlternativeAdapter.ViewHolder> {
 
-        private ArrayList<PollAlternative> mPollAlternatives;
+        private ArrayList<PollAnswer> mPollAnswers;
         private Context mContext;
 
         // Pass in the contact array into the constructor
-        public AddAlternativeAdapter(Context context, ArrayList<PollAlternative> pollAlternatives) {
-            mPollAlternatives = pollAlternatives;
+        public AddAlternativeAdapter(Context context, ArrayList<PollAnswer> pollAlternatives) {
+            mPollAnswers = pollAlternatives;
             mContext = context;
         }
 
@@ -249,9 +246,10 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
                 if (et_alternative.getTag() != null)
                     position = (int) et_alternative.getTag();
 
-                if (position == mPollAlternatives.size()-1 &&
+                if (position == mPollAnswers.size()-1 &&
                         !et_alternative.getText().toString().equals("")) {
-                    pollAlternatives.add(new PollAlternative());
+                    String answer = et_alternative.getText().toString();
+                    pollAnswers.add(new PollAnswer(answer));
                     //mAddAlternativeAdapter.notifyDataSetChanged();
                 }
 
@@ -280,17 +278,17 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
         @Override
         public void onBindViewHolder(AddPollFragment.AddAlternativeAdapter.ViewHolder viewHolder, int position) {
             // Get the data model based on position
-            PollAlternative alt = mPollAlternatives.get(position);
+            PollAnswer alt = mPollAnswers.get(position);
 
             // Set item views based on your views and data model
             EditText alternative = viewHolder.et_alternative;
-            alternative.setText(alt.getAlternative());
+            alternative.setText(alt.getAnswer());
             alternative.setTag(position);
         }
 
         @Override
         public int getItemCount() {
-            return mPollAlternatives.size();
+            return mPollAnswers.size();
         }
     }
 }
