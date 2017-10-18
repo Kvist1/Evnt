@@ -12,6 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -187,6 +190,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
         private static final int ITEM_TYPE_YOUR_MESSAGE = 0;
         private static final int ITEM_TYPE_OTHER_MESSAGE = 1;
         private static final int ITEM_TYPE_CREATOR_MESSAGE = 2;
+        private int lastPosition = -1;
 
         private ArrayList<ChatMessage> mChatMessages;
         private Context mContext;
@@ -273,11 +277,26 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
             time.setText(dateFormat.format(date));
 
+            setAnimation(viewHolder.itemView, position);
+
         }
 
         @Override
         public int getItemCount() {
             return mChatMessages.size();
+        }
+
+        private void setAnimation(View view, int position){
+            if (position > lastPosition) {
+                AnimationSet anims = new AnimationSet(false);
+
+                AlphaAnimation fade = new AlphaAnimation(0.0f, 1.0f);
+                fade.setDuration(200);
+                anims.addAnimation(fade);
+
+                view.startAnimation(anims);
+                lastPosition = position;
+            }
         }
 
     }
