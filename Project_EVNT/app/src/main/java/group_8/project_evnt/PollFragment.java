@@ -120,7 +120,11 @@ public class PollFragment extends Fragment {
                 // Begin the transaction
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 // Replace the contents of the container with the new fragment
-                ft.add(R.id.linear_layout_container, new AddPollFragment());
+                Bundle args = new Bundle();
+                args.putString(ARG_ROOM_ID, currentRoomId);
+                AddPollFragment fragment = new AddPollFragment();
+                fragment.setArguments(args);
+                ft.add(R.id.linear_layout_container, fragment);
                 // Complete the changes added above
                 ft.commit();
             }
