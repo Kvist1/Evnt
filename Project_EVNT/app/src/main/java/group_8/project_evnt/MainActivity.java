@@ -17,7 +17,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+
 import android.widget.TextView;
+
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,19 +41,26 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mActionBarToolbar;
     private String currentRoomId;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (getIntent() != null) {
             currentRoomId = getIntent().getStringExtra(getString(R.string.key_room_id));
-            mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(mActionBarToolbar);
-            mActionBarToolbar.setTitle(currentRoomId);
+        //    mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
+        //    setSupportActionBar(mActionBarToolbar);
+        //    mActionBarToolbar.setTitle(currentRoomId);
+            TextView textView = (TextView) findViewById(R.id.menu_room_id);
+            textView.setText("Room ID: " + currentRoomId);
         }
+        //TODO add code for User ID
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -63,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
