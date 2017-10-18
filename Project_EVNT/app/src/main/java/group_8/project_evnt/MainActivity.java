@@ -19,7 +19,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+
 import android.widget.TextView;
+
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,21 +44,28 @@ public class MainActivity extends AppCompatActivity {
     private String currentRoomId;
     private String currentRoomCode;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (getIntent() != null) {
             currentRoomId = getIntent().getStringExtra(getString(R.string.key_room_id));
-            Log.d("ROOMID", currentRoomId);
+
+         //   Log.d("ROOMID", currentRoomId);
             currentRoomCode = getIntent().getStringExtra(getString(R.string.key_room_code));
             mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(mActionBarToolbar);
             mActionBarToolbar.setTitle(currentRoomCode);
+
         }
+        //TODO add code for User ID
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -74,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -5,13 +5,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,7 +41,7 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
     private ArrayList<PollAlternative> pollAlternatives = new ArrayList<>();
 
     private RecyclerView mPollAlternativeRecycleView;
-    private Button mAddAltButton;
+
 
     private LinearLayoutManager mLinearLayoutManager;
     private AddAlternativeAdapter mAddAlternativeAdapter;
@@ -106,8 +110,6 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_add_poll, container, false);
 
         mPollAlternativeRecycleView = view.findViewById(R.id.rv_alternatives);
-        mAddAltButton = view.findViewById(R.id.add_alt_button);
-        mAddAltButton.setOnClickListener(this);
 
         return view;
     }
@@ -128,13 +130,7 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
-        switch(v.getId()) {
-            // when sending new message
-            case R.id.add_alt_button:
-                pollAlternatives.add(new PollAlternative());
-                mAddAlternativeAdapter.notifyDataSetChanged();
-                break;
-        }
+        
     }
 
     // Create the basic adapter extending from RecyclerView.Adapter
@@ -153,21 +149,52 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
 
         // Provide a direct reference to each of the views within a data item
         // Used to cache the views within the item layout for fast access
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        public class ViewHolder extends RecyclerView.ViewHolder implements TextWatcher {
+
             // Your holder should contain a member variable
             // for any view that will be set as you render a row
             public TextView text_plus_sign;
             public EditText et_alternative;
+            private Context context;
 
             // We also create a constructor that accepts the entire item row
             // and does the view lookups to find each subview
-            public ViewHolder(View itemView) {
+            public ViewHolder(Context context, View itemView) {
                 // Stores the itemView in a public final member variable that can be used
                 // to access the context from any ViewHolder instance.
                 super(itemView);
 
+                // store context
+                this.context = context;
+
                 text_plus_sign = (TextView) itemView.findViewById(R.id.plus_sign);
                 et_alternative = (EditText) itemView.findViewById(R.id.add_alternative);
+                et_alternative.addTextChangedListener(this);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                int position = -1;
+                if (et_alternative.getTag() != null)
+                    position = (int) et_alternative.getTag();
+
+                if (position == mPollAlternatives.size()-1 &&
+                        !et_alternative.getText().toString().equals("")) {
+                    pollAlternatives.add(new PollAlternative());
+                    //mAddAlternativeAdapter.notifyDataSetChanged();
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         }
 
@@ -180,7 +207,7 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
             View yourMessageView = inflater.inflate(R.layout.fragment_add_alt, parent, false);
 
             // Return a new holder instance
-            AddPollFragment.AddAlternativeAdapter.ViewHolder viewHolder = new AddPollFragment.AddAlternativeAdapter.ViewHolder(yourMessageView);
+            AddPollFragment.AddAlternativeAdapter.ViewHolder viewHolder = new AddPollFragment.AddAlternativeAdapter.ViewHolder(context, yourMessageView);
             return viewHolder;
         }
 
@@ -191,8 +218,9 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
             PollAlternative alt = mPollAlternatives.get(position);
 
             // Set item views based on your views and data model
-            TextView alternative = viewHolder.et_alternative;
+            EditText alternative = viewHolder.et_alternative;
             alternative.setText(alt.getAlternative());
+            alternative.setTag(position);
         }
 
         @Override
