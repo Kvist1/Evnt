@@ -38,6 +38,7 @@
         android:textSize="40dp"
         android:cursorVisible="false"
         android:textAlignment="textStart"
+        android:layout_gravity="start"
         android:maxLength="4"
         android:paddingLeft="55dp"
         android:background="@drawable/join_room_border"
@@ -49,19 +50,46 @@
         />
 
 
-    <View
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="30dp"
-        android:background="@android:color/white"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="50dp"
+            android:background="@android:color/white"
+            android:layout_gravity="top"
+            android:alpha="0.25"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="4dp"
+            android:background="@color/colorPrimaryDark"
+            android:text="OR"
+            android:gravity="center"
+            android:textSize="18dp"
+            android:textColor="#88FFFFFF"/>
+
+
+    </FrameLayout>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/create_button"
         android:onClick="onCreateButtonClick"
+        android:text="CREATE A NEW ROOM"
+        android:padding="30dp"
+        android:background="@color/colorAccent"
+        android:textColor="#fff"
+
         />
 </LinearLayout>
 
