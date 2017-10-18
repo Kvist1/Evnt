@@ -44,6 +44,7 @@
         android:elevation="5dp"
         android:hint="____"
         android:letterSpacing=".5"
+        android:imeOptions="actionSend"
         android:maxLines="1"
         />
 

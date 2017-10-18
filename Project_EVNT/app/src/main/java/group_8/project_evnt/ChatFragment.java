@@ -12,6 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -21,12 +24,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 import group_8.project_evnt.core.Database;
 import group_8.project_evnt.models.ChatMessage;
+import group_8.project_evnt.models.Room;
+import group_8.project_evnt.utils.AppUtils;
 
 
 /**
@@ -150,12 +157,25 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
         switch(v.getId()) {
             // when sending new message
             case R.id.button_send_message:
-                String msg = mMessageInputEditText.getText().toString();
+                final String msg = mMessageInputEditText.getText().toString();
                 if(msg.isEmpty()) {
                     return;
                 }
 
-                Database.getInstance().writeChatMessage(currentRoomId, "111", msg, false);
+                final Database db = Database.getInstance();
+                final String userId = AppUtils.getDeviceId(getContext());
+                Log.i("--------currentRoomId: ", currentRoomId);
+                db.findRoomById(currentRoomId, new Database.CreateRoomCallbackInterface() {
+                    @Override
+                    public void onRoomRetrieved(Room room) {
+                        Log.i("--------USERID: ", userId);
+                        Log.i("--------USERID; ", room.getCreator());
+                        if (room != null) {
+                            boolean isCreator = room.getCreator().equals(userId);
+                            db.writeChatMessage(currentRoomId, userId, msg, isCreator);
+                        }
+                    }
+                });
 
                 mMessageInputEditText.setText("");
                 break;
@@ -167,8 +187,10 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
     public class ChatMessageAdapter extends
             RecyclerView.Adapter<ChatMessageAdapter.ViewHolder> {
 
-        private static final int ITEM_TYPE_NORMAL = 0;
-        private static final int ITEM_TYPE_CREATOR = 1;
+        private static final int ITEM_TYPE_YOUR_MESSAGE = 0;
+        private static final int ITEM_TYPE_OTHER_MESSAGE = 1;
+        private static final int ITEM_TYPE_CREATOR_MESSAGE = 2;
+        private int lastPosition = -1;
 
         private ArrayList<ChatMessage> mChatMessages;
         private Context mContext;
@@ -205,10 +227,13 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
         }
 
         public int getItemViewType(int position) {
-            if (mChatMessages.get(position).isCreator()) {
-                return ITEM_TYPE_CREATOR;
+            ChatMessage message = mChatMessages.get(position);
+            if (message.getUserId().equals(AppUtils.getDeviceId(getContext()))) {
+                return ITEM_TYPE_YOUR_MESSAGE;
+            } else if (message.isCreator()) {
+                return ITEM_TYPE_CREATOR_MESSAGE;
             } else {
-                return ITEM_TYPE_NORMAL;
+                return ITEM_TYPE_OTHER_MESSAGE;
             }
         }
 
@@ -223,8 +248,9 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
 
             switch (viewType){
                 case 0: messageView = inflater.inflate(R.layout.chat_your_message_item, parent, false); break;
-                case 1: messageView = inflater.inflate(R.layout.chat_lecturer_message_item, parent, false); break;
-                default: messageView = inflater.inflate(R.layout.chat_your_message_item, parent, false); break;
+                case 1: messageView = inflater.inflate(R.layout.chat_other_message_item, parent, false); break;
+                case 2: messageView = inflater.inflate(R.layout.chat_creator_message, parent, false); break;
+                default: messageView = inflater.inflate(R.layout.chat_other_message_item, parent, false); break;
 
             }
 
@@ -239,6 +265,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
             // Get the data model based on position
             ChatMessage chatMessage = mChatMessages.get(position);
 
+
             // Set item views based on your views and data model
             TextView message = viewHolder.mMessageTextView;
             message.setText(chatMessage.getMessage());
@@ -250,11 +277,26 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
             time.setText(dateFormat.format(date));
 
+            setAnimation(viewHolder.itemView, position);
+
         }
 
         @Override
         public int getItemCount() {
             return mChatMessages.size();
+        }
+
+        private void setAnimation(View view, int position){
+            if (position > lastPosition) {
+                AnimationSet anims = new AnimationSet(false);
+
+                AlphaAnimation fade = new AlphaAnimation(0.0f, 1.0f);
+                fade.setDuration(200);
+                anims.addAnimation(fade);
+
+                view.startAnimation(anims);
+                lastPosition = position;
+            }
         }
 
     }
