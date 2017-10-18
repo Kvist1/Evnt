@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,7 +32,10 @@ import group_8.project_evnt.core.Database;
 import group_8.project_evnt.models.ChatMessage;
 import group_8.project_evnt.models.Poll;
 import group_8.project_evnt.models.PollAnswer;
+import group_8.project_evnt.models.PollViewholder;
 import group_8.project_evnt.utils.AppUtils;
+import group_8.project_evnt.views.EditablePollViewHolder;
+import group_8.project_evnt.views.VotePollViewHolder;
 
 public class PollFragment extends Fragment {
     private String currentRoomId;
@@ -69,22 +73,89 @@ public class PollFragment extends Fragment {
         }
 
         DatabaseReference poll = Database.getInstance().poll(currentRoomId);
-        poll.addValueEventListener(new ValueEventListener() {
+        poll.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<String> keys = new ArrayList<String>();
+                polls.clear();
                 for (DataSnapshot p : dataSnapshot.getChildren()){
                     Poll poll = p.getValue(Poll.class);
-                    if (!poll.isLive()){
-                        polls.add(poll);
-                        keys.add(p.getKey());
-                        renderEditablePolls(keys);
-                    }
+                    poll.setKey(p.getKey());
+                    polls.add(poll);
+                }
+
+                if (mPollListAdapter != null){
+                    mPollListAdapter.notifyDataSetChanged();
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {}
+        });
+
+        poll.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.i("CHILD ADDED: ", dataSnapshot.toString());
+                Poll poll = dataSnapshot.getValue(Poll.class);
+                poll.setKey(dataSnapshot.getKey());
+                if (!poll.isLive()){
+                    polls.add(poll);
+                }
+                mPollListAdapter.notifyItemInserted(polls.size()-1);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Poll poll = dataSnapshot.getValue(Poll.class);
+                poll.setKey(dataSnapshot.getKey());
+
+                // TODO, replace with proper polls.indexOf() instead of this hacky solution
+                int index = -1;
+                for (int i = 0; i < polls.size(); i++){
+                    if (polls.get(i).getKey().equals(poll.getKey())){
+                        index = i;
+                        break;
+
+                    }
+                }
+
+                if (index > -1){
+                    polls.set(index, poll);
+                    mPollListAdapter.notifyItemChanged(index);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.i("CHILD REMOVED: ", dataSnapshot.toString());
+                Poll poll = dataSnapshot.getValue(Poll.class);
+                poll.setKey(dataSnapshot.getKey());
+
+                // TODO, replace with proper polls.indexOf() instead of this hacky solution
+                int index = -1;
+                for (int i = 0; i < polls.size(); i++){
+                    if (polls.get(i).getKey().equals(poll.getKey())){
+                        index = i;
+                        break;
+
+                    }
+                }
+
+                if (index > -1){
+                    polls.remove(index);
+                    mPollListAdapter.notifyItemRemoved(index);
+                }
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                Log.i("CHILD MOVED: ", dataSnapshot.toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.i("CHILD CANCELED: ", databaseError.toString());
+            }
         });
     }
 
@@ -115,41 +186,21 @@ public class PollFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         // Setup adapter
         // Create adapter passing in the sample user data
-        //mPollListAdapter = new PollFragment.PollListAdapter(this.getActivity(), polls);
+        mPollListAdapter = new PollFragment.PollListAdapter(this.getActivity(), polls);
         // Attach the adapter to the recyclerview to populate items
-        //mPollListRecycleView.setAdapter(mPollListAdapter);
+        mPollListRecycleView.setAdapter(mPollListAdapter);
         // Set layout manager to position the items
-        //mLinearLayoutManager = new LinearLayoutManager(this.getActivity());
-        //mPollListRecycleView.setLayoutManager(mLinearLayoutManager);
+        mLinearLayoutManager = new LinearLayoutManager(this.getActivity());
+        mPollListRecycleView.setLayoutManager(mLinearLayoutManager);
     }
-
-
-    private void renderEditablePolls(ArrayList<String> keys){
-        for (int i = 0; i < keys.size(); i++) {
-            String key = keys.get(i);
-            renderPoll(key);
-        }
-    }
-
-    private void renderPoll(String key){
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        Bundle args = new Bundle();
-        args.putString(ARG_ROOM_ID, currentRoomId);
-        args.putString(ARG_POLL_ID, key);
-        AddPollFragment fragment = new AddPollFragment();
-        fragment.setArguments(args);
-        ft.add(R.id.linear_layout_container, fragment);
-        ft.commit();
-    }
-
 
     // Create the basic adapter extending from RecyclerView.Adapter
     // Note that we specify the custom ViewHolder which gives us access to our views
     public class PollListAdapter extends
-            RecyclerView.Adapter<PollFragment.PollListAdapter.ViewHolder> {
+            RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private static final int ITEM_TYPE_NORMAL = 0;
-        private static final int ITEM_TYPE_CREATOR = 1;
+        private static final int ITEM_TYPE_LIVE = 0;
+        private static final int ITEM_TYPE_EDITABLE = 1;
 
         private ArrayList<Poll> mPolls;
         private Context mContext;
@@ -191,49 +242,68 @@ public class PollFragment extends Fragment {
             }
         }
 
-//        public int getItemViewType(int position) {
-//            if (mChatMessages.get(position).isCreator()) {
-//                return ITEM_TYPE_CREATOR;
-//            } else {
-//                return ITEM_TYPE_NORMAL;
-//            }
-//        }
+        public int getItemViewType(int position) {
+            if (mPolls.get(position).isLive()) {
+                return ITEM_TYPE_LIVE;
+            } else {
+                return ITEM_TYPE_EDITABLE;
+            }
+}
 
         @Override
-        public PollFragment.PollListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             Context context = parent.getContext();
             LayoutInflater inflater = LayoutInflater.from(context);
 
-            // Inflate the custom layout
-            View view = inflater.inflate(R.layout.poll_list_item, parent, false);
+            RecyclerView.ViewHolder viewHolder;
+            switch(viewType){
+                case ITEM_TYPE_LIVE:
+                    View votableView = inflater.inflate(R.layout.poll_list_item, parent, false);
+                    viewHolder = new VotePollViewHolder(votableView);
+                    break;
+                case ITEM_TYPE_EDITABLE:
+                    View editableView = inflater.inflate(R.layout.fragment_add_poll, parent, false);
+                    viewHolder = new EditablePollViewHolder(editableView, getContext());
+                    break;
 
-            // Return a new holder instance
-            PollFragment.PollListAdapter.ViewHolder viewHolder = new PollFragment.PollListAdapter.ViewHolder(view);
+                default:
+                    View defaultView= inflater.inflate(R.layout.fragment_add_poll, parent, false);
+                    viewHolder = new EditablePollViewHolder(defaultView, getContext());
+
+            }
+
             return viewHolder;
         }
 
         // Involves populating data into the item through holder
         @Override
-        public void onBindViewHolder(PollFragment.PollListAdapter.ViewHolder viewHolder, int position) {
+        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
             // Get the data model based on position
             Poll poll = mPolls.get(position);
 
-            final PollAnswerListAdapter mPollAnswerListAdapter = new PollAnswerListAdapter(this.mContext, poll.getPollAnwsers());
-            viewHolder.mPollAnswerRecyclerView.setAdapter(mPollAnswerListAdapter);
-            viewHolder.mPollAnswerRecyclerView.setHasFixedSize(true);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(this.mContext, LinearLayoutManager.VERTICAL, false);
-            viewHolder.mPollAnswerRecyclerView.setLayoutManager(layoutManager);
+            int type = viewHolder.getItemViewType();
+            if (type == ITEM_TYPE_EDITABLE || type == ITEM_TYPE_LIVE){
+                PollViewholder holder = (PollViewholder) viewHolder;
+                holder.bindPoll(currentRoomId, poll);
+            }
 
-            viewHolder.mPollTitleTextView.setText(poll.getTitle());
-            viewHolder.mPollQuestionTextView.setText(poll.getQuestion());
+
+            //final PollAnswerListAdapter mPollAnswerListAdapter = new PollAnswerListAdapter(this.mContext, poll.getPollAnwsers());
+            //viewHolder.mPollAnswerRecyclerView.setAdapter(mPollAnswerListAdapter);
+            //viewHolder.mPollAnswerRecyclerView.setHasFixedSize(true);
+            //LinearLayoutManager layoutManager = new LinearLayoutManager(this.mContext, LinearLayoutManager.VERTICAL, false);
+            //viewHolder.mPollAnswerRecyclerView.setLayoutManager(layoutManager);
+
+            //viewHolder.mPollTitleTextView.setText(poll.getTitle());
+            //viewHolder.mPollQuestionTextView.setText(poll.getQuestion());
 
             // bind button events
-            viewHolder.mVoteButton.setOnClickListener(new View.OnClickListener() {
+            /*viewHolder.mVoteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d("SELECTED ANSWER", mPollAnswerListAdapter.selectedPosition + " ");
                 }
-            });
+            });*/
 
         }
 

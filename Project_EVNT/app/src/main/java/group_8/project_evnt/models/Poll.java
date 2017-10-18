@@ -7,6 +7,8 @@ import java.util.ArrayList;
  */
 
 public class Poll {
+
+    private String key;
     private String title;
     private String question;
     private boolean isLive;
@@ -23,6 +25,14 @@ public class Poll {
         this.creator = creator;
         this.pollAnwsers = pollAnwsers;
         this.isLive = isLive;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getTitle() {

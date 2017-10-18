@@ -153,4 +153,14 @@ public class Database {
         return ref;
     }
 
+    public DatabaseReference updatePoll(String roomId, String pollId, Poll poll){
+        if (pollId != null){
+            DatabaseReference ref = poll(roomId).child(pollId);
+            ref.setValue(poll);
+            return ref;
+        }
+
+        return null;
+    }
+
 }
