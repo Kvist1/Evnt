@@ -8,23 +8,40 @@
     android:background="@drawable/card_rounded_shape"
     android:layout_margin="16dp">
 
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/menu_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_more_vert"
+            android:layout_gravity="right"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/mainCardColor"/>
+
+    </android.support.design.widget.CoordinatorLayout>
     <EditText
         android:id="@+id/text_input_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginTop="-20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="30dp"
         android:hint="Title"/>
+
+
 
     <EditText
         android:id="@+id/text_input_question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="30dp"
         android:hint="Ask a question"/>
 
     <android.support.v7.widget.RecyclerView
@@ -33,4 +50,17 @@
         android:layout_weight="1"
         android:id="@+id/rv_alternatives"
         ></android.support.v7.widget.RecyclerView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/publish_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PUBLISH"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"/>
+    </RelativeLayout>
+
 </LinearLayout>

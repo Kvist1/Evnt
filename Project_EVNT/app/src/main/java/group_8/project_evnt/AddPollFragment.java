@@ -1,19 +1,25 @@
 package group_8.project_evnt;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +33,8 @@ import java.util.ArrayList;
 import group_8.project_evnt.core.Database;
 import group_8.project_evnt.models.ChatMessage;
 import group_8.project_evnt.models.PollAlternative;
+import group_8.project_evnt.models.Room;
+import group_8.project_evnt.utils.AppUtils;
 
 
 /**
@@ -41,6 +49,7 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
     private ArrayList<PollAlternative> pollAlternatives = new ArrayList<>();
 
     private RecyclerView mPollAlternativeRecycleView;
+    private ImageButton menuButton;
 
 
     private LinearLayoutManager mLinearLayoutManager;
@@ -110,6 +119,9 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_add_poll, container, false);
 
         mPollAlternativeRecycleView = view.findViewById(R.id.rv_alternatives);
+        menuButton = view.findViewById(R.id.menu_button);
+
+        menuButton.setOnClickListener(this);
 
         return view;
     }
@@ -130,7 +142,19 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
+        switch(v.getId()) {
+            // when clicking the menu
+            case R.id.menu_button:
+                showPopup(v);
+        }
         
+    }
+
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(getContext(), v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_poll_card, popup.getMenu());
+        popup.show();
     }
 
     // Create the basic adapter extending from RecyclerView.Adapter

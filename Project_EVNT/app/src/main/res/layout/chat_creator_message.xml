@@ -35,7 +35,14 @@
             android:textSize="10dp"
             android:paddingTop="5dp"/>
 
+        <TextView
+            android:text="Creator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            android:textColor="@color/colorAccent"/>
 
-        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

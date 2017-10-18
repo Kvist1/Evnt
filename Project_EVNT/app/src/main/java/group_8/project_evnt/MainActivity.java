@@ -53,15 +53,11 @@ public class MainActivity extends AppCompatActivity {
         if (getIntent() != null) {
             currentRoomId = getIntent().getStringExtra(getString(R.string.key_room_id));
 
-         //   Log.d("ROOMID", currentRoomId);
             currentRoomCode = getIntent().getStringExtra(getString(R.string.key_room_code));
             mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
-  //          setSupportActionBar(mActionBarToolbar);
-//            mActionBarToolbar.setTitle(currentRoomCode);
             TextView textView = (TextView) findViewById(R.id.menu_room_id);
-            textView.setText("Room ID: " + currentRoomCode);
+            textView.setText("ROOM " + currentRoomCode);
         }
-        //TODO add code for User ID
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -167,8 +163,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            // Show 2 total pages.
+            return 2;
         }
 
         @Override
@@ -178,8 +174,6 @@ public class MainActivity extends AppCompatActivity {
                     return "CHAT";
                 case 1:
                     return "POLLS";
-                case 2:
-                    return "MATERIALS";
             }
             return null;
         }
