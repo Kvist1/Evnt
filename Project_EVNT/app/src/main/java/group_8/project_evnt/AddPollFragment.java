@@ -1,6 +1,7 @@
 package group_8.project_evnt;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -50,6 +51,8 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
 
     private RecyclerView mPollAlternativeRecycleView;
     private ImageButton menuButton;
+    private Button publishButton;
+    private EditText etTitle, etQuestion;
 
 
     private LinearLayoutManager mLinearLayoutManager;
@@ -119,9 +122,15 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_add_poll, container, false);
 
         mPollAlternativeRecycleView = view.findViewById(R.id.rv_alternatives);
-        menuButton = view.findViewById(R.id.menu_button);
 
+        menuButton = view.findViewById(R.id.menu_button);
         menuButton.setOnClickListener(this);
+
+        publishButton = view.findViewById(R.id.publish_button);
+        publishButton.setOnClickListener(this);
+
+        etTitle = view.findViewById(R.id.text_input_title);
+        etQuestion = view.findViewById(R.id.text_input_question);
 
         return view;
     }
@@ -143,9 +152,14 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
 
         switch(v.getId()) {
-            // when clicking the menu
+
             case R.id.menu_button:
                 showPopup(v);
+                break;
+
+            case R.id.publish_button:
+                publishPoll(v);
+                break;
         }
         
     }
@@ -155,6 +169,33 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_poll_card, popup.getMenu());
         popup.show();
+    }
+
+    private void publishPoll(View v) {
+
+        Toast toast;
+        if (etTitle.getText().toString().equals("")) {
+            toast = Toast.makeText(getContext(), "Enter a title", Toast.LENGTH_SHORT);
+        }
+        else if (etQuestion.getText().toString().equals("")) {
+            toast = Toast.makeText(getContext(), "Enter a question", Toast.LENGTH_SHORT);
+        } else if (pollAlternatives.size() < 3) {
+            toast = Toast.makeText(getContext(), "Enter at least two alternatives", Toast.LENGTH_SHORT);
+        } else {
+            // if successful
+            toast = Toast.makeText(getContext(), "The poll has been published :)", Toast.LENGTH_SHORT);
+            // change the button to withdraw
+            publishButton.setText("WITHDRAW");
+            publishButton.setBackgroundColor(Color.RED);
+        }
+
+        if (toast != null)
+            toast.show();
+
+
+        // save the poll and send to server
+
+
     }
 
     // Create the basic adapter extending from RecyclerView.Adapter
