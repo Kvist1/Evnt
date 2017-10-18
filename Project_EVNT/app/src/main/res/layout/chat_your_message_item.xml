@@ -18,7 +18,7 @@
         >
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_message"
             android:text="Just text"
@@ -27,27 +27,12 @@
             />
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/tv_timestamp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="5dp"
             android:alpha="0.5"
-            android:textSize="10dp"
-            android:text="12:08"/>
+            android:textSize="10dp" />
     </LinearLayout>
-
-    
-    <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/tv_sender"-->
-        <!--android:text="Sender"-->
-        <!--/>-->
-    
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/tv_you_or_other"-->
-        <!--android:text="You or others"-->
-        <!--/>-->
 
 </LinearLayout>

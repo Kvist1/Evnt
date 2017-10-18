@@ -3,10 +3,11 @@ package group_8.project_evnt;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +21,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 import group_8.project_evnt.core.Database;
 import group_8.project_evnt.models.ChatMessage;
@@ -109,6 +111,24 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
         mSendMessageButton.setOnClickListener(this);
         mMessageInputEditText = view.findViewById(R.id.et_message_input);
 
+        mMessageInputEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+                if (charSequence.length() != 0){
+                    mSendMessageButton.setAlpha(new Float(1));
+                } else {
+                    mSendMessageButton.setAlpha(new Float(0.25));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+
         return view;
     }
 
@@ -135,10 +155,9 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
                     return;
                 }
 
-                Database.getInstance().writeChatMessage(currentRoomId, "111", msg);
+                Database.getInstance().writeChatMessage(currentRoomId, "111", msg, false);
 
                 mMessageInputEditText.setText("");
-//                mMessageInputEditText.clearFocus();
                 break;
         }
     }
@@ -147,6 +166,9 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
     // Note that we specify the custom ViewHolder which gives us access to our views
     public class ChatMessageAdapter extends
             RecyclerView.Adapter<ChatMessageAdapter.ViewHolder> {
+
+        private static final int ITEM_TYPE_NORMAL = 0;
+        private static final int ITEM_TYPE_CREATOR = 1;
 
         private ArrayList<ChatMessage> mChatMessages;
         private Context mContext;
@@ -168,8 +190,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
             // Your holder should contain a member variable
             // for any view that will be set as you render a row
             public TextView mMessageTextView;
-            public TextView mSenderTextView;
-            public TextView mYouOrOtherTextView;
+            public TextView mTimeStampTextView;
 
             // We also create a constructor that accepts the entire item row
             // and does the view lookups to find each subview
@@ -179,21 +200,36 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
                 super(itemView);
 
                 mMessageTextView = (TextView) itemView.findViewById(R.id.tv_message);
-//                mSenderTextView = (TextView) itemView.findViewById(R.id.tv_sender);
-//                mYouOrOtherTextView = (TextView) itemView.findViewById(R.id.tv_you_or_other);
+                mTimeStampTextView = (TextView) itemView.findViewById(R.id.tv_timestamp);
+            }
+        }
+
+        public int getItemViewType(int position) {
+            if (mChatMessages.get(position).isCreator()) {
+                return ITEM_TYPE_CREATOR;
+            } else {
+                return ITEM_TYPE_NORMAL;
             }
         }
 
         @Override
         public ChatMessageAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            Log.i("VIEW TYPE: ", String.valueOf(viewType));
             Context context = parent.getContext();
             LayoutInflater inflater = LayoutInflater.from(context);
 
             // Inflate the custom layout
-            View yourMessageView = inflater.inflate(R.layout.chat_your_message_item, parent, false);
+            View messageView;
+
+            switch (viewType){
+                case 0: messageView = inflater.inflate(R.layout.chat_your_message_item, parent, false); break;
+                case 1: messageView = inflater.inflate(R.layout.chat_lecturer_message_item, parent, false); break;
+                default: messageView = inflater.inflate(R.layout.chat_your_message_item, parent, false); break;
+
+            }
 
             // Return a new holder instance
-            ViewHolder viewHolder = new ViewHolder(yourMessageView);
+            ViewHolder viewHolder = new ViewHolder(messageView);
             return viewHolder;
         }
 
@@ -207,12 +243,20 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
             TextView message = viewHolder.mMessageTextView;
             message.setText(chatMessage.getMessage());
 
+            // Format and set the chat message timestamp
+            TextView time = viewHolder.mTimeStampTextView;
+            long ms = chatMessage.getTime();
+            Date date = new Date(ms);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+            time.setText(dateFormat.format(date));
+
         }
 
         @Override
         public int getItemCount() {
             return mChatMessages.size();
         }
+
     }
 
 }

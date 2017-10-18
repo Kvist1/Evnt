@@ -21,18 +21,23 @@
         android:layout_marginTop="8dp"
         android:layout_weight="0"
         android:minHeight="81dp"
-        android:padding="12dp"
+        android:padding="15dp"
         android:background="@android:color/white"
         android:layout_gravity="center_vertical"
         >
         <EditText
             android:id="@+id/et_message_input"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_weight="1"
             android:hint="Your comments, answers, suggestions"
+            android:maxLines="1"
+            android:inputType="text"
+            android:imeOptions="actionDone"
             />
         <ImageButton
+            android:background="@color/colorAccent"
+            android:alpha="0.25"
             android:id="@+id/button_send_message"
             android:layout_width="60dp"
             android:layout_height="match_parent"

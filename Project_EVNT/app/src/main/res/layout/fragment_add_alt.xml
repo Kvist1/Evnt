@@ -14,8 +14,9 @@
         android:layout_marginLeft="20dp"/>
 
     <EditText
+        android:maxLines="1"
         android:id="@+id/add_alternative"
-        android:hint="Add alternative"
+        android:hint="Add alternative ..."
         android:layout_height="match_parent"
         android:layout_width="wrap_content"
         android:layout_marginTop="4dp"

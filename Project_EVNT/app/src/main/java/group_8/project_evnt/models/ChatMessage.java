@@ -11,15 +11,17 @@ public class ChatMessage {
     private String userId;
     private String message;
     private long time;
+    private boolean isCreator;
 
     public ChatMessage(){
         // empty constructor for firebase
     }
 
-    public ChatMessage(String usrId, String msg){
+    public ChatMessage(String usrId, String msg, boolean creator){
         userId = usrId;
         message = msg;
         time = System.currentTimeMillis();
+        isCreator = creator;
     }
 
     public String getUserId() {
@@ -44,6 +46,14 @@ public class ChatMessage {
 
     public void setTime(long time) {
         this.time = time;
+    }
+
+    public boolean isCreator() {
+        return isCreator;
+    }
+
+    public void setCreator(boolean creator) {
+        isCreator = creator;
     }
 
 }
