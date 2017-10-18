@@ -9,10 +9,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
 
 import group_8.project_evnt.models.ChatMessage;
+import group_8.project_evnt.models.Poll;
+import group_8.project_evnt.models.PollAnswer;
 import group_8.project_evnt.models.Room;
 import group_8.project_evnt.utils.AppUtils;
 
@@ -95,6 +98,7 @@ public class Database {
         return database.getReference().child("chats").child(roomId);
     }
 
+
     public DatabaseReference writeChatMessage(String roomId, String userId, String message, boolean isCreator){
         ChatMessage newMessage = new ChatMessage(userId, message, isCreator);
 
@@ -104,6 +108,20 @@ public class Database {
 
         return chatReference.child(msgKey);
 
+    }
+
+    public DatabaseReference poll(String roomId) {
+        return database.getReference().child("polls").child(roomId);
+    }
+
+    public DatabaseReference createPoll(String roomId, String title, String question, ArrayList<PollAnswer> answers, boolean isLive) {
+        Poll newPoll = new Poll(title, question, answers, isLive);
+
+        DatabaseReference pollReference = database.getReference().child("polls").child(roomId);
+        String pollKey = pollReference.push().getKey();
+        pollReference.child(pollKey).setValue(newPoll);
+
+        return pollReference.child(pollKey);
     }
 
 }
