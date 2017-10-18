@@ -131,8 +131,8 @@ public class Database {
         return database.getReference().child("polls").child(roomId);
     }
 
-    public DatabaseReference createPoll(String roomId, String title, String question, ArrayList<PollAnswer> answers, boolean isLive) {
-        Poll newPoll = new Poll(title, question, answers, isLive);
+    public DatabaseReference createPoll(String roomId, String title, String question, String creator, ArrayList<PollAnswer> answers, boolean isLive) {
+        Poll newPoll = new Poll(title, question, creator, answers, isLive);
 
         DatabaseReference pollReference = database.getReference().child("polls").child(roomId);
         String pollKey = pollReference.push().getKey();

@@ -75,8 +75,8 @@ public class PollFragment extends Fragment {
         a1.addVoter("testid2");
         answers.add(a1);
         answers.add(a2);
-        Poll p1 = new Poll("Title-1", "Question-1", answers, true);
-        Poll p2 = new Poll("Title-2", "Question-2", answers, false);
+        Poll p1 = new Poll("Title-1", "Question-1", "111", answers, true);
+        Poll p2 = new Poll("Title-2", "Question-2", "111", answers, false);
         polls.add(p1);
 //        polls.add(p2);
         //
