@@ -21,6 +21,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -184,6 +186,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
 
         private static final int ITEM_TYPE_YOUR_MESSAGE = 0;
         private static final int ITEM_TYPE_OTHER_MESSAGE = 1;
+        private static final int ITEM_TYPE_CREATOR_MESSAGE = 2;
 
         private ArrayList<ChatMessage> mChatMessages;
         private Context mContext;
@@ -220,8 +223,11 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
         }
 
         public int getItemViewType(int position) {
-            if (mChatMessages.get(position).getUserId().equals(AppUtils.getDeviceId(getContext()))) {
+            ChatMessage message = mChatMessages.get(position);
+            if (message.getUserId().equals(AppUtils.getDeviceId(getContext()))) {
                 return ITEM_TYPE_YOUR_MESSAGE;
+            } else if (message.isCreator()) {
+                return ITEM_TYPE_CREATOR_MESSAGE;
             } else {
                 return ITEM_TYPE_OTHER_MESSAGE;
             }
@@ -239,6 +245,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
             switch (viewType){
                 case 0: messageView = inflater.inflate(R.layout.chat_your_message_item, parent, false); break;
                 case 1: messageView = inflater.inflate(R.layout.chat_other_message_item, parent, false); break;
+                case 2: messageView = inflater.inflate(R.layout.chat_creator_message, parent, false); break;
                 default: messageView = inflater.inflate(R.layout.chat_other_message_item, parent, false); break;
 
             }
@@ -253,6 +260,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener  {
         public void onBindViewHolder(ChatMessageAdapter.ViewHolder viewHolder, int position) {
             // Get the data model based on position
             ChatMessage chatMessage = mChatMessages.get(position);
+
 
             // Set item views based on your views and data model
             TextView message = viewHolder.mMessageTextView;
