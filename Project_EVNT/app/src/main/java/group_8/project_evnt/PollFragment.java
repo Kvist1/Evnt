@@ -31,12 +31,14 @@ import group_8.project_evnt.core.Database;
 import group_8.project_evnt.models.ChatMessage;
 import group_8.project_evnt.models.Poll;
 import group_8.project_evnt.models.PollAnswer;
+import group_8.project_evnt.utils.AppUtils;
 
 public class PollFragment extends Fragment {
     private String currentRoomId;
     private ArrayList<Poll> polls = new ArrayList<Poll>();
 
     private static final String ARG_ROOM_ID = "roomid";
+    private static final String ARG_POLL_ID = "pollid";
 
     private RecyclerView mPollListRecycleView;
 
@@ -66,39 +68,23 @@ public class PollFragment extends Fragment {
             return;
         }
 
-        // mockup data for poll
-        PollAnswer a1 = new PollAnswer("Alternative 1");
-        PollAnswer a2 = new PollAnswer("Alternative 2");
-        ArrayList<PollAnswer> answers = new ArrayList<PollAnswer>();
-//        ArrayList<String> voters = new ArrayList<String>();
-        a1.addVoter("testid1");
-        a1.addVoter("testid2");
-        answers.add(a1);
-        answers.add(a2);
-        Poll p1 = new Poll("Title-1", "Question-1", "111", answers, true);
-        Poll p2 = new Poll("Title-2", "Question-2", "111", answers, false);
-        polls.add(p1);
-//        polls.add(p2);
-        //
-
         DatabaseReference poll = Database.getInstance().poll(currentRoomId);
         poll.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-//                polls.clear();
+                ArrayList<String> keys = new ArrayList<String>();
                 for (DataSnapshot p : dataSnapshot.getChildren()){
-                    Log.d("Data", p.toString());
-                    polls.add(p.getValue(Poll.class));
-                }
-                if(mPollListAdapter != null) {
-                    mPollListAdapter.notifyDataSetChanged();
+                    Poll poll = p.getValue(Poll.class);
+                    if (!poll.isLive()){
+                        polls.add(poll);
+                        keys.add(p.getKey());
+                        renderEditablePolls(keys);
+                    }
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
     }
 
@@ -117,16 +103,7 @@ public class PollFragment extends Fragment {
 
         newPollFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Begin the transaction
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                // Replace the contents of the container with the new fragment
-                Bundle args = new Bundle();
-                args.putString(ARG_ROOM_ID, currentRoomId);
-                AddPollFragment fragment = new AddPollFragment();
-                fragment.setArguments(args);
-                ft.add(R.id.linear_layout_container, fragment);
-                // Complete the changes added above
-                ft.commit();
+                Database.getInstance().createPoll(currentRoomId, "", "", AppUtils.getDeviceId(getContext()), new ArrayList<PollAnswer>(), false);
             }
         });
 
@@ -138,13 +115,33 @@ public class PollFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         // Setup adapter
         // Create adapter passing in the sample user data
-        mPollListAdapter = new PollFragment.PollListAdapter(this.getActivity(), polls);
+        //mPollListAdapter = new PollFragment.PollListAdapter(this.getActivity(), polls);
         // Attach the adapter to the recyclerview to populate items
-        mPollListRecycleView.setAdapter(mPollListAdapter);
+        //mPollListRecycleView.setAdapter(mPollListAdapter);
         // Set layout manager to position the items
-        mLinearLayoutManager = new LinearLayoutManager(this.getActivity());
-        mPollListRecycleView.setLayoutManager(mLinearLayoutManager);
+        //mLinearLayoutManager = new LinearLayoutManager(this.getActivity());
+        //mPollListRecycleView.setLayoutManager(mLinearLayoutManager);
     }
+
+
+    private void renderEditablePolls(ArrayList<String> keys){
+        for (int i = 0; i < keys.size(); i++) {
+            String key = keys.get(i);
+            renderPoll(key);
+        }
+    }
+
+    private void renderPoll(String key){
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        Bundle args = new Bundle();
+        args.putString(ARG_ROOM_ID, currentRoomId);
+        args.putString(ARG_POLL_ID, key);
+        AddPollFragment fragment = new AddPollFragment();
+        fragment.setArguments(args);
+        ft.add(R.id.linear_layout_container, fragment);
+        ft.commit();
+    }
+
 
     // Create the basic adapter extending from RecyclerView.Adapter
     // Note that we specify the custom ViewHolder which gives us access to our views
@@ -250,14 +247,16 @@ public class PollFragment extends Fragment {
     public class PollAnswerListAdapter extends
             RecyclerView.Adapter<PollFragment.PollAnswerListAdapter.ViewHolder> {
 
-        private ArrayList<PollAnswer> mPollAnswers;
+        private ArrayList<PollAnswer> mPollAnswers = new ArrayList<>();
         private Context mContext;
 
         public int selectedPosition = -1;
 
         // Pass in the contact array into the constructor
         public PollAnswerListAdapter(Context context, ArrayList<PollAnswer> pollAnswers) {
-            mPollAnswers = pollAnswers;
+            if (pollAnswers != null) {
+                mPollAnswers = pollAnswers;
+            }
             mContext = context;
         }
 

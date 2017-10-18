@@ -9,8 +9,10 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -37,6 +39,7 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
     private static final String ARG_POLL_ID = "pollid";
 
     private String currentRoomId;
+    private String currentPollId;
     private ArrayList<PollAnswer> pollAnswers = new ArrayList<>();
 
     private RecyclerView mPollAlternativeRecycleView;
@@ -73,36 +76,13 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
 
         if (getArguments() != null) {
             currentRoomId = getArguments().getString(ARG_ROOM_ID);
+            currentPollId = getArguments().getString(ARG_POLL_ID);
         } else {
             return;
         }
 
 
         pollAnswers.add(new PollAnswer());
-        //mAddAlternativeAdapter.notifyDataSetChanged();
-
-//        DatabaseReference poll = Database.getInstance().poll(currentPollId);
-//        poll.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                pollAnswers.clear();
-//                for (DataSnapshot alternative : dataSnapshot.getChildren()){
-//                    Log.d("Data", alternative.toString());
-//                    pollAnswers.add(alternative.getValue(PollAlternative.class));
-//                }
-//                if(mAddAlternativeAdapter != null) {
-//                    mAddAlternativeAdapter.notifyDataSetChanged();
-//                }
-//                if(mLinearLayoutManager != null) {
-//                    mLinearLayoutManager.scrollToPosition(pollAnswers.size() - 1);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
     }
 
     @Override
@@ -151,14 +131,32 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
                 publishPoll(v);
                 break;
         }
-        
+
     }
 
     public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(getContext(), v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_poll_card, popup.getMenu());
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch(item.getItemId()){
+                    case R.id.menu_item_edit:
+                        break;
+                    case R.id.menu_item_delete:
+                        deletePoll();
+                }
+                return true;
+            }
+        });
+
         popup.show();
+    }
+
+    private void deletePoll(){
+        Database.getInstance().deletePoll(currentRoomId, currentPollId);
     }
 
     private void publishPoll(View v) {
@@ -172,19 +170,8 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
         } else if (pollAnswers.size() < 3) {
             toast = Toast.makeText(getContext(), "Enter at least two alternatives", Toast.LENGTH_SHORT);
         } else {
-            // if successful
+            Database.getInstance().setPollPublished(currentRoomId, currentPollId, true);
             toast = Toast.makeText(getContext(), "The poll has been published :)", Toast.LENGTH_SHORT);
-            // change the button to withdraw
-            publishButton.setText("WITHDRAW");
-            publishButton.setBackgroundColor(Color.RED);
-
-            // save the poll and send to server
-            final Database db = Database.getInstance();
-
-            final String title = etTitle.getText().toString();
-            final String question = etQuestion.getText().toString();
-            final String userId = AppUtils.getDeviceId(getContext());
-            db.createPoll(currentRoomId, title, question, userId, pollAnswers, true);
         }
 
         if (toast != null)
