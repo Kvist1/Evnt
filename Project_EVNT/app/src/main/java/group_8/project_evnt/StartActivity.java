@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Debug;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,8 +23,8 @@ import group_8.project_evnt.core.Database;
 import group_8.project_evnt.models.Room;
 import group_8.project_evnt.utils.AppUtils;
 
-public class StartActivity extends AppCompatActivity {
-
+public class StartActivity extends AppCompatActivity implements TextWatcher{
+    private EditText editText;
     FrameLayout progressBarHolder;
 
     @Override
@@ -32,13 +34,15 @@ public class StartActivity extends AppCompatActivity {
 
         progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
 
-        EditText editText = (EditText)findViewById(R.id.room_id);
+        editText = (EditText)findViewById(R.id.room_id);
         editText.setTransformationMethod(null);
         editText.setImeActionLabel("GO", KeyEvent.KEYCODE_ENTER);
-
+        editText.addTextChangedListener(this);
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+
+
                 if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                     progressBarHolder.setVisibility(View.VISIBLE);
                     Database.getInstance().findRoom(textView.getText().toString(), new Database.CreateRoomCallbackInterface() {
@@ -84,5 +88,45 @@ public class StartActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        View line1 = findViewById(R.id.hint_line1);
+        View line2 = findViewById(R.id.hint_line2);
+        View line3 = findViewById(R.id.hint_line3);
+
+        if (editText.getText().length() == 0){
+            Log.d("Textlängden är ", editText.getText().length() + "");
+            line1.setBackgroundColor(getColor(R.color.colorAccent));
+            line2.setBackgroundColor(getColor(R.color.mainCardColor));
+            line3.setBackgroundColor(getColor(R.color.mainCardColor));
+        }
+
+        if (editText.getText().length() == 1){
+            line1.setBackgroundColor(getColor(R.color.mainCardColor));
+            line2.setBackgroundColor(getColor(R.color.colorAccent));
+            line3.setBackgroundColor(getColor(R.color.mainCardColor));
+        }
+        else if (editText.getText().length() == 2){
+            line1.setBackgroundColor(getColor(R.color.mainCardColor));
+            line2.setBackgroundColor(getColor(R.color.mainCardColor));
+            line3.setBackgroundColor(getColor(R.color.colorAccent));
+        }
+        else if (editText.getText().length() == 3){
+            line1.setBackgroundColor(getColor(R.color.colorAccent));
+            line2.setBackgroundColor(getColor(R.color.colorAccent));
+            line3.setBackgroundColor(getColor(R.color.colorAccent));
+        }
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
+    }
 }
