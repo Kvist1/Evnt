@@ -28,6 +28,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 >
 
                 <ImageView
@@ -39,21 +40,18 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/menu_room_id"
                         android:textAlignment="textEnd"
+                        android:layout_gravity="end"
+                        android:textStyle="bold"
+                        android:textColor="#fff"
                         />
-
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="User ID: "
-                        android:textAlignment="textEnd"/>
 
                 </LinearLayout>
 
