@@ -18,6 +18,8 @@
             android:layout_gravity="start"
             android:textColor="@color/textGray"
             android:textSize="16sp"
+            android:text="aaa"
+            android:layout_weight="1"
             />
         <TextView
             android:id="@+id/tv_voter_count"
@@ -26,6 +28,8 @@
             android:layout_gravity="end"
             android:textColor="@color/textGray"
             android:textSize="16sp"
+            android:text="dddd"
+            android:layout_marginLeft="8dp"
             />
     </LinearLayout>
 
