@@ -56,9 +56,10 @@ public class MainActivity extends AppCompatActivity {
          //   Log.d("ROOMID", currentRoomId);
             currentRoomCode = getIntent().getStringExtra(getString(R.string.key_room_code));
             mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(mActionBarToolbar);
-            mActionBarToolbar.setTitle(currentRoomCode);
-
+  //          setSupportActionBar(mActionBarToolbar);
+//            mActionBarToolbar.setTitle(currentRoomCode);
+            TextView textView = (TextView) findViewById(R.id.menu_room_id);
+            textView.setText("Room ID: " + currentRoomCode);
         }
         //TODO add code for User ID
 
