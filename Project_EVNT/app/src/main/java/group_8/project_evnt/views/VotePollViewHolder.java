@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import group_8.project_evnt.models.Poll;
-import group_8.project_evnt.models.PollViewholder;
 
 /**
  * Created by Felix on 2017-10-18.

@@ -1,21 +1,15 @@
 package group_8.project_evnt.views;
 
 import android.content.Context;
-import android.provider.ContactsContract;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -24,8 +18,6 @@ import group_8.project_evnt.R;
 import group_8.project_evnt.core.Database;
 import group_8.project_evnt.models.Poll;
 import group_8.project_evnt.models.PollAnswer;
-import group_8.project_evnt.models.PollViewholder;
-import group_8.project_evnt.utils.DebouncedOnEditorAction;
 
 /**
  * Created by Felix on 2017-10-18.

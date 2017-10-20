@@ -1,13 +1,11 @@
 package group_8.project_evnt;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,15 +22,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import group_8.project_evnt.core.Database;
-import group_8.project_evnt.models.ChatMessage;
 import group_8.project_evnt.models.Poll;
 import group_8.project_evnt.models.PollAnswer;
-import group_8.project_evnt.models.PollViewholder;
+import group_8.project_evnt.views.PollViewholder;
 import group_8.project_evnt.utils.AppUtils;
 import group_8.project_evnt.views.EditablePollViewHolder;
 import group_8.project_evnt.views.VotePollViewHolder;
