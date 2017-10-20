@@ -40,6 +40,7 @@ public class PollFragment extends Fragment {
     private static final String ARG_POLL_ID = "pollid";
 
     private RecyclerView mPollListRecycleView;
+    private FloatingActionButton newPollFab;
 
     private LinearLayoutManager mLinearLayoutManager;
     private PollFragment.PollListAdapter mPollListAdapter;
@@ -96,7 +97,10 @@ public class PollFragment extends Fragment {
                 if (!poll.isLive()){
                     polls.add(poll);
                 }
+
                 mPollListAdapter.notifyItemInserted(polls.size()-1);
+
+                updateAddButtonAlpha();
             }
 
             @Override
@@ -118,6 +122,8 @@ public class PollFragment extends Fragment {
                     polls.set(index, poll);
                     mPollListAdapter.notifyItemChanged(index);
                 }
+
+                updateAddButtonAlpha();
             }
 
             @Override
@@ -140,6 +146,9 @@ public class PollFragment extends Fragment {
                     polls.remove(index);
                     mPollListAdapter.notifyItemRemoved(index);
                 }
+
+
+                updateAddButtonAlpha();
             }
 
             @Override
@@ -154,6 +163,19 @@ public class PollFragment extends Fragment {
         });
     }
 
+    private void updateAddButtonAlpha(){
+        if (polls.size() > 0){
+            Poll lastPoll = polls.get(polls.size()-1);
+            if (!lastPoll.isLive()){
+                newPollFab.setAlpha(0.5f);
+            } else {
+                newPollFab.setAlpha(1f);
+            }
+        } else {
+            newPollFab.setAlpha(1f);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -164,11 +186,17 @@ public class PollFragment extends Fragment {
         // Inflate the layout for this fragment
         mPollListRecycleView = rootView.findViewById(R.id.rv_poll_list);
 
-        FloatingActionButton newPollFab = (FloatingActionButton) rootView.findViewById(R.id.new_poll_fab);
+        newPollFab = (FloatingActionButton) rootView.findViewById(R.id.new_poll_fab);
         final LinearLayout l1 = (LinearLayout) rootView.findViewById(R.id.linear_layout_container);
 
         newPollFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                if (polls.size() > 0){
+                    Poll lastPoll = polls.get(polls.size()-1);
+                    if (!lastPoll.isLive()){
+                        return;
+                    }
+                }
                 Database.getInstance().createPoll(currentRoomId, "", "", AppUtils.getDeviceId(getContext()), new ArrayList<PollAnswer>(), false);
             }
         });

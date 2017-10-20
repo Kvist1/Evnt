@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -50,7 +51,6 @@ public class EditablePollViewHolder extends RecyclerView.ViewHolder implements V
     public EditablePollViewHolder(View itemView, Context ctx) {
         super(itemView);
         context = ctx;
-        Log.i("VIEWHOLDER INIT", "-------------------");
         // Setup views
         mPollAlternativeRecycleView = itemView.findViewById(R.id.rv_alternatives);
         menuButton = itemView.findViewById(R.id.menu_button);
@@ -80,7 +80,7 @@ public class EditablePollViewHolder extends RecyclerView.ViewHolder implements V
         mPollAlternativeRecycleView.setAdapter(mAddAlternativeAdapter);
         mLinearLayoutManager = new LinearLayoutManager(context);
         mPollAlternativeRecycleView.setLayoutManager(mLinearLayoutManager);
-        Log.i("mPollAlternativeRecyc", mPollAlternativeRecycleView.toString());
+
     }
 
     @Override
@@ -185,7 +185,6 @@ public class EditablePollViewHolder extends RecyclerView.ViewHolder implements V
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            Log.i("ONCREATE VIEWHOLDER", "ONCREATE VIEWHOLDER");
             Context context = parent.getContext();
             LayoutInflater inflater = LayoutInflater.from(context);
 
