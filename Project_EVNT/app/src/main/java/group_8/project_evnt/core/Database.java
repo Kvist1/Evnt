@@ -154,6 +154,7 @@ public class Database {
     }
 
     public DatabaseReference updatePoll(String roomId, String pollId, Poll poll){
+        Log.i("SAVING POLL WITH ANSERS", poll.getPollAnwsers().get(0).getAnswer());
         if (pollId != null){
             DatabaseReference ref = poll(roomId).child(pollId);
             ref.setValue(poll);
