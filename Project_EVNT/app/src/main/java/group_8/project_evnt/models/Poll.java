@@ -19,11 +19,11 @@ public class Poll {
     public Poll() {
     }
 
-    public Poll(String title, String question, String creator, ArrayList<PollAnswer> pollAnwsers, boolean isLive) {
+    public Poll(String title, String question, String creator, ArrayList<PollAnswer> pollAnswers, boolean isLive) {
         this.title = title;
         this.question = question;
         this.creator = creator;
-        this.pollAnswers = pollAnwsers;
+        this.pollAnswers = pollAnswers;
         this.isLive = isLive;
     }
 

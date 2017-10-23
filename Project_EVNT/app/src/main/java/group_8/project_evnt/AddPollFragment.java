@@ -9,6 +9,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -246,14 +247,16 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
                 if (et_alternative.getTag() != null)
                     position = (int) et_alternative.getTag();
 
-                if (position == mPollAnswers.size()-1 &&
-                        !et_alternative.getText().toString().equals("")) {
-                    String answer = et_alternative.getText().toString();
-
-                    pollAnswers.get(position).setAnswer(answer);
-                    pollAnswers.add(new PollAnswer());
+                if (position < 0){
+                    return;
                 }
 
+                String answer = et_alternative.getText().toString();
+                pollAnswers.get(position).setAnswer(answer);
+
+                if (position == mPollAnswers.size()-1 && !et_alternative.getText().toString().equals("")){
+                    pollAnswers.add(new PollAnswer());
+                }
             }
 
             @Override
