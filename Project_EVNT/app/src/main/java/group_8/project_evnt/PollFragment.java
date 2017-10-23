@@ -98,12 +98,10 @@ public class PollFragment extends Fragment {
                 Log.i("CHILD ADDED: ", dataSnapshot.toString());
                 Poll poll = dataSnapshot.getValue(Poll.class);
                 poll.setKey(dataSnapshot.getKey());
-                if (!poll.isLive()){
+                if (poll.isLive()){
                     polls.add(poll);
+                    mPollListAdapter.notifyItemInserted(polls.size() - 1);
                 }
-
-                mPollListAdapter.notifyItemInserted(polls.size() - 1);
-
             }
 
             @Override
@@ -287,6 +285,9 @@ public class PollFragment extends Fragment {
             viewHolder.mVoteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (mPollAnswerListAdapter.selectedPosition == -1){
+                        return;
+                    }
                     Database.getInstance().answerPoll(currentRoomId, poll.getKey(), String.valueOf(mPollAnswerListAdapter.selectedPosition), AppUtils.getDeviceId(getContext()));
                 }
             });
@@ -372,9 +373,14 @@ public class PollFragment extends Fragment {
             }
 
             if(selectedPosition == position)
-                holder.mAnswerTextView.setTextColor(getResources().getColor(R.color.colorPrimary));
-            else
+                holder.mAnswerTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+            else if (answer.getVoters() != null){
+                if (answer.getVoters().get(AppUtils.getDeviceId(getContext())) != null){
+                    holder.mAnswerTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+                }
+            } else {
                 holder.mAnswerTextView.setTextColor(getResources().getColor(R.color.textGray));
+            }
 
             holder.mAnswerTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
