@@ -249,8 +249,9 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
                 if (position == mPollAnswers.size()-1 &&
                         !et_alternative.getText().toString().equals("")) {
                     String answer = et_alternative.getText().toString();
-                    pollAnswers.add(new PollAnswer(answer));
-                    //mAddAlternativeAdapter.notifyDataSetChanged();
+
+                    pollAnswers.get(position).setAnswer(answer);
+                    pollAnswers.add(new PollAnswer());
                 }
 
             }

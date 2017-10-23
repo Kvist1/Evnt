@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,12 +32,14 @@ import group_8.project_evnt.core.Database;
 import group_8.project_evnt.models.ChatMessage;
 import group_8.project_evnt.models.Poll;
 import group_8.project_evnt.models.PollAnswer;
+import group_8.project_evnt.utils.AppUtils;
 
 public class PollFragment extends Fragment {
     private String currentRoomId;
     private ArrayList<Poll> polls = new ArrayList<Poll>();
 
     private static final String ARG_ROOM_ID = "roomid";
+    private static final String ARG_POLL_ID = "pollid";
 
     private RecyclerView mPollListRecycleView;
 
@@ -66,31 +69,19 @@ public class PollFragment extends Fragment {
             return;
         }
 
-        // mockup data for poll
-        PollAnswer a1 = new PollAnswer("Alternative 1");
-        PollAnswer a2 = new PollAnswer("Alternative 2");
-        ArrayList<PollAnswer> answers = new ArrayList<PollAnswer>();
-//        ArrayList<String> voters = new ArrayList<String>();
-        a1.addVoter("testid1");
-        a1.addVoter("testid2");
-        answers.add(a1);
-        answers.add(a2);
-        Poll p1 = new Poll("Title-1", "Question-1", "111", answers, true);
-        Poll p2 = new Poll("Title-2", "Question-2", "111", answers, false);
-        polls.add(p1);
-//        polls.add(p2);
-        //
 
         DatabaseReference poll = Database.getInstance().poll(currentRoomId);
-        poll.addValueEventListener(new ValueEventListener() {
+        poll.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-//                polls.clear();
+                polls.clear();
                 for (DataSnapshot p : dataSnapshot.getChildren()){
-                    Log.d("Data", p.toString());
-                    polls.add(p.getValue(Poll.class));
+                    Poll poll = p.getValue(Poll.class);
+                    poll.setKey(p.getKey());
+                    polls.add(poll);
                 }
-                if(mPollListAdapter != null) {
+
+                if (mPollListAdapter != null){
                     mPollListAdapter.notifyDataSetChanged();
                 }
             }
@@ -98,6 +89,77 @@ public class PollFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+
+        poll.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.i("CHILD ADDED: ", dataSnapshot.toString());
+                Poll poll = dataSnapshot.getValue(Poll.class);
+                poll.setKey(dataSnapshot.getKey());
+                if (!poll.isLive()){
+                    polls.add(poll);
+                }
+
+                mPollListAdapter.notifyItemInserted(polls.size() - 1);
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Poll poll = dataSnapshot.getValue(Poll.class);
+                poll.setKey(dataSnapshot.getKey());
+
+                // TODO, replace with proper polls.indexOf() instead of this hacky solution
+                int index = -1;
+                for (int i = 0; i < polls.size(); i++){
+                    if (polls.get(i).getKey().equals(poll.getKey())){
+                        index = i;
+                        break;
+
+                    }
+                }
+
+                if (index > -1){
+                    polls.set(index, poll);
+                }
+
+                mPollListAdapter.notifyItemChanged(index);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.i("CHILD REMOVED: ", dataSnapshot.toString());
+                Poll poll = dataSnapshot.getValue(Poll.class);
+                poll.setKey(dataSnapshot.getKey());
+
+                // TODO, replace with proper polls.indexOf() instead of this hacky solution
+                int index = -1;
+                for (int i = 0; i < polls.size(); i++){
+                    if (polls.get(i).getKey().equals(poll.getKey())){
+                        index = i;
+                        break;
+
+                    }
+                }
+
+                if (index > -1){
+                    polls.remove(index);
+                }
+
+                mPollListAdapter.notifyItemRemoved(index);
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                Log.i("CHILD MOVED: ", dataSnapshot.toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.i("CHILD CANCELED: ", databaseError.toString());
             }
         });
     }
@@ -151,9 +213,6 @@ public class PollFragment extends Fragment {
     public class PollListAdapter extends
             RecyclerView.Adapter<PollFragment.PollListAdapter.ViewHolder> {
 
-        private static final int ITEM_TYPE_NORMAL = 0;
-        private static final int ITEM_TYPE_CREATOR = 1;
-
         private ArrayList<Poll> mPolls;
         private Context mContext;
 //        private PollAnswerListAdapter mPollAnswerListAdapter;
@@ -194,14 +253,6 @@ public class PollFragment extends Fragment {
             }
         }
 
-//        public int getItemViewType(int position) {
-//            if (mChatMessages.get(position).isCreator()) {
-//                return ITEM_TYPE_CREATOR;
-//            } else {
-//                return ITEM_TYPE_NORMAL;
-//            }
-//        }
-
         @Override
         public PollFragment.PollListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             Context context = parent.getContext();
@@ -217,11 +268,13 @@ public class PollFragment extends Fragment {
 
         // Involves populating data into the item through holder
         @Override
-        public void onBindViewHolder(PollFragment.PollListAdapter.ViewHolder viewHolder, int position) {
+        public void onBindViewHolder(PollFragment.PollListAdapter.ViewHolder viewHolder, final int position) {
             // Get the data model based on position
-            Poll poll = mPolls.get(position);
+            final Poll poll = mPolls.get(position);
 
-            final PollAnswerListAdapter mPollAnswerListAdapter = new PollAnswerListAdapter(this.mContext, poll.getPollAnwsers());
+            Log.i("Poll: ", poll.getPollAnswers().toString());
+
+            final PollAnswerListAdapter mPollAnswerListAdapter = new PollAnswerListAdapter(this.mContext, poll.getPollAnswers());
             viewHolder.mPollAnswerRecyclerView.setAdapter(mPollAnswerListAdapter);
             viewHolder.mPollAnswerRecyclerView.setHasFixedSize(true);
             LinearLayoutManager layoutManager = new LinearLayoutManager(this.mContext, LinearLayoutManager.VERTICAL, false);
@@ -234,7 +287,7 @@ public class PollFragment extends Fragment {
             viewHolder.mVoteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("SELECTED ANSWER", mPollAnswerListAdapter.selectedPosition + " ");
+                    Database.getInstance().answerPoll(currentRoomId, poll.getKey(), String.valueOf(mPollAnswerListAdapter.selectedPosition), AppUtils.getDeviceId(getContext()));
                 }
             });
 
@@ -299,7 +352,15 @@ public class PollFragment extends Fragment {
         @Override
         public void onBindViewHolder(PollAnswerListAdapter.ViewHolder holder, final int position) {
             PollAnswer answer = mPollAnswers.get(position);
-            int voterCount = answer.getVoters().size();
+            if (answer == null){
+                return;
+            }
+
+            int voterCount = 0;
+            if (answer.getVoters() != null){
+                voterCount = answer.getVoters().size();
+            }
+
             holder.mAnswerTextView.setText(answer.getAnswer());
             holder.mVoterCount.setText(voterCount + " votes");
 
@@ -319,7 +380,7 @@ public class PollFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     selectedPosition = position;
-                    notifyDataSetChanged();
+                    notifyItemChanged(position);
                 }
             });
         }

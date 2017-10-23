@@ -7,12 +7,14 @@ import java.util.ArrayList;
  */
 
 public class Poll {
+
+    private String key;
     private String title;
     private String question;
     private boolean isLive;
     private boolean isEnd;
     private String creator;
-    private ArrayList<PollAnswer> pollAnwsers;
+    private ArrayList<PollAnswer> pollAnswers;
 
     public Poll() {
     }
@@ -21,7 +23,7 @@ public class Poll {
         this.title = title;
         this.question = question;
         this.creator = creator;
-        this.pollAnwsers = pollAnwsers;
+        this.pollAnswers = pollAnwsers;
         this.isLive = isLive;
     }
 
@@ -41,12 +43,12 @@ public class Poll {
         this.question = question;
     }
 
-    public ArrayList<PollAnswer> getPollAnwsers() {
-        return pollAnwsers;
+    public ArrayList<PollAnswer> getPollAnswers() {
+        return pollAnswers;
     }
 
-    public void setPollAnwsers(ArrayList<PollAnswer> pollAnwsers) {
-        this.pollAnwsers = pollAnwsers;
+    public void setPollAnswers(ArrayList<PollAnswer> pollAnwsers) {
+        this.pollAnswers = pollAnwsers;
     }
 
     public boolean isLive() {
@@ -71,5 +73,13 @@ public class Poll {
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

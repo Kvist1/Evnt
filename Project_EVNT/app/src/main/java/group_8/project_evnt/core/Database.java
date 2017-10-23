@@ -131,14 +131,42 @@ public class Database {
         return database.getReference().child("polls").child(roomId);
     }
 
-    public DatabaseReference createPoll(String roomId, String title, String question, String creator, ArrayList<PollAnswer> answers, boolean isLive) {
+    public String createPoll(String roomId, String title, String question, String creator, ArrayList<PollAnswer> answers, boolean isLive) {
         Poll newPoll = new Poll(title, question, creator, answers, isLive);
 
         DatabaseReference pollReference = database.getReference().child("polls").child(roomId);
         String pollKey = pollReference.push().getKey();
         pollReference.child(pollKey).setValue(newPoll);
 
-        return pollReference.child(pollKey);
+        return pollKey;
+    }
+
+    public DatabaseReference deletePoll(String roomId, String pollId){
+        DatabaseReference ref = poll(roomId).child(pollId);
+        ref.removeValue();
+        return ref;
+    }
+
+    public DatabaseReference setPollPublished(String roomId, String pollId, boolean isLive){
+        DatabaseReference ref = poll(roomId).child(pollId);
+        ref.child("live").setValue(isLive);
+        return ref;
+    }
+
+    public DatabaseReference updatePoll(String roomId, String pollId, Poll poll){
+        if (pollId != null){
+            DatabaseReference ref = poll(roomId).child(pollId);
+            ref.setValue(poll);
+            return ref;
+        }
+
+        return null;
+    }
+
+    public String answerPoll(String roomId, String pollId, String answerId, String userId){
+        DatabaseReference ref = poll(roomId).child(pollId).child("pollAnswers").child(answerId).child("voters");
+        ref.child(userId).setValue(true);
+        return userId;
     }
 
 }

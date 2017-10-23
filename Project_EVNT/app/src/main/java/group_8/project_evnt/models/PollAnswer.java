@@ -1,6 +1,7 @@
 package group_8.project_evnt.models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by kittipon on 10/16/17.
@@ -8,17 +9,17 @@ import java.util.ArrayList;
 
 public class PollAnswer {
     private String answer;
-    private ArrayList<String> voters;
+    private HashMap<String, Object> voters;
 
     public PollAnswer() {
     }
 
     public PollAnswer(String answer) {
         this.answer = answer;
-        this.voters = new ArrayList<String>();
+        this.voters = new HashMap<>();
     }
 
-    public PollAnswer(String answer, ArrayList<String> voters) {
+    public PollAnswer(String answer, HashMap<String, Object> voters) {
         this.answer = answer;
         this.voters = voters;
     }
@@ -31,24 +32,20 @@ public class PollAnswer {
         this.answer = answer;
     }
 
-    public ArrayList<String> getVoters() {
+    public HashMap<String, Object> getVoters() {
         return voters;
     }
 
-    public void setVoters(ArrayList<String> voters) {
+    public void setVoters(HashMap<String, Object> voters) {
         this.voters = voters;
     }
 
     public void addVoter(String userId) {
-        this.voters.add(userId);
+        this.voters.put(userId, true);
     }
 
     public boolean removeVoter(String userId) {
-        int index = this.voters.indexOf(userId);
-        if(index != -1) {
-            this.voters.remove(index);
-            return true;
-        }
+        this.voters.remove(userId);
         return false;
     }
 }
