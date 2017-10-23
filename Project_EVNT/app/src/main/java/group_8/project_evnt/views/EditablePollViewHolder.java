@@ -106,8 +106,6 @@ public class EditablePollViewHolder extends RecyclerView.ViewHolder implements V
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch(item.getItemId()){
-                    case R.id.menu_item_edit:
-                        break;
                     case R.id.menu_item_delete:
                         deletePoll();
                 }

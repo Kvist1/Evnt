@@ -282,7 +282,7 @@ public class PollFragment extends Fragment {
             switch(viewType){
                 case ITEM_TYPE_LIVE:
                     View votableView = inflater.inflate(R.layout.poll_list_item, parent, false);
-                    viewHolder = new VotePollViewHolder(votableView);
+                    viewHolder = new VotePollViewHolder(votableView, getContext());
                     break;
                 case ITEM_TYPE_EDITABLE:
                     View editableView = inflater.inflate(R.layout.fragment_add_poll, parent, false);

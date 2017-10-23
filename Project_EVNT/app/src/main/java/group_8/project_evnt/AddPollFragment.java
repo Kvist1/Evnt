@@ -143,8 +143,6 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch(item.getItemId()){
-                    case R.id.menu_item_edit:
-                        break;
                     case R.id.menu_item_delete:
                         deletePoll();
                 }

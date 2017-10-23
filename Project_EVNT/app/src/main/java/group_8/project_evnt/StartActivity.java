@@ -1,5 +1,7 @@
 package group_8.project_evnt;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Debug;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -26,12 +29,13 @@ import group_8.project_evnt.utils.AppUtils;
 public class StartActivity extends AppCompatActivity implements TextWatcher{
     private EditText editText;
     FrameLayout progressBarHolder;
+    private Activity currentActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-
+        currentActivity = this;
         progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
 
         editText = (EditText)findViewById(R.id.room_id);
@@ -42,6 +46,15 @@ public class StartActivity extends AppCompatActivity implements TextWatcher{
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
 
+                View focusView = currentActivity.getCurrentFocus();
+                Log.i("--------> ", "THIS HERE VIEW HERE SHOULD NOT BE NULL");
+                if (focusView != null) {
+                    Log.i("--------> ", "IT LOOKS LIKE ITS NOT");
+                    InputMethodManager imm = (InputMethodManager)getSystemService(currentActivity.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
+                }
+
+                Log.i("--------> ", "BUT IT WAS NULL");
 
                 if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                     progressBarHolder.setVisibility(View.VISIBLE);
