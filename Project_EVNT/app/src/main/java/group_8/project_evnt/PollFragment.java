@@ -1,6 +1,7 @@
 package group_8.project_evnt;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -121,9 +122,8 @@ public class PollFragment extends Fragment {
 
                 if (index > -1){
                     polls.set(index, poll);
+                    mPollListAdapter.notifyItemChanged(index);
                 }
-
-                mPollListAdapter.notifyItemChanged(index);
             }
 
             @Override
@@ -144,10 +144,8 @@ public class PollFragment extends Fragment {
 
                 if (index > -1){
                     polls.remove(index);
+                    mPollListAdapter.notifyItemRemoved(index);
                 }
-
-                mPollListAdapter.notifyItemRemoved(index);
-
             }
 
             @Override
