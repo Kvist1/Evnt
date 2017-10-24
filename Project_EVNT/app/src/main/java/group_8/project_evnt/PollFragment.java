@@ -449,7 +449,9 @@ public class PollFragment extends Fragment {
 
 
             // style changing
-            if (answer.getVoters() != null && answer.getVoters().get(AppUtils.getDeviceId(getContext()))){
+            if (answer.getVoters() != null
+                    && answer.getVoters().get(AppUtils.getDeviceId(getContext())) != null
+                    && answer.getVoters().get(AppUtils.getDeviceId(getContext()))){
                 holder.mAnswerTextView.setTextColor(getResources().getColor(R.color.colorAccent));
                 holder.mIconCheckVote.setImageResource(R.drawable.check_active);
             }
@@ -482,7 +484,9 @@ public class PollFragment extends Fragment {
 //                    notifyItemChanged(position);
 //                }
 
-                    if (answer.getVoters() != null && answer.getVoters().get(AppUtils.getDeviceId(getContext()))) {
+                    if (answer.getVoters() != null
+                            && answer.getVoters().get(AppUtils.getDeviceId(getContext())) != null
+                            && answer.getVoters().get(AppUtils.getDeviceId(getContext()))) {
                         Database.getInstance().unanswerPoll(currentRoomId, parentPoll.getKey(), String.valueOf(selectedPosition), AppUtils.getDeviceId(getContext()));
                     } else {
                         Database.getInstance().answerPoll(currentRoomId, parentPoll.getKey(), String.valueOf(selectedPosition), AppUtils.getDeviceId(getContext()));
