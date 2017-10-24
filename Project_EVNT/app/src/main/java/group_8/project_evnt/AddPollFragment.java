@@ -22,11 +22,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.franmontiel.fullscreendialog.FullScreenDialogContent;
-import com.franmontiel.fullscreendialog.FullScreenDialogController;
-import com.franmontiel.fullscreendialog.FullScreenDialogFragment;
-
 import java.util.ArrayList;
 
 import group_8.project_evnt.core.Database;
@@ -52,9 +47,7 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
     private Button publishButton;
     private EditText etTitle, etQuestion;
     private ImageButton closeButton;
-
-    private FullScreenDialogController dialogController;
-
+    
 
     private LinearLayoutManager mLinearLayoutManager;
     private AddAlternativeAdapter mAddAlternativeAdapter;
