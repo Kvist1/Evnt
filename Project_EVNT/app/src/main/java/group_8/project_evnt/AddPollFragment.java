@@ -47,7 +47,8 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
     private Button publishButton;
     private EditText etTitle, etQuestion;
     private ImageButton closeButton;
-    
+
+
 
     private LinearLayoutManager mLinearLayoutManager;
     private AddAlternativeAdapter mAddAlternativeAdapter;

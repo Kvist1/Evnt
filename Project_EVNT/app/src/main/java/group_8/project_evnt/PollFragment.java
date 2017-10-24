@@ -3,6 +3,7 @@ package group_8.project_evnt;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -16,10 +17,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +39,9 @@ import group_8.project_evnt.models.Poll;
 import group_8.project_evnt.models.PollAnswer;
 import group_8.project_evnt.models.Room;
 import group_8.project_evnt.utils.AppUtils;
+
+import static android.R.attr.maxWidth;
+import static android.R.attr.width;
 
 public class PollFragment extends Fragment {
     private String currentRoomId;
@@ -367,6 +373,10 @@ public class PollFragment extends Fragment {
             public TextView mVoterCount;
             public View mBarCount;
             public View mBarFrame;
+            public LinearLayout mLayoutAnswerList;
+
+            public int measuredWidth;
+            public int measuredHeight;
 
             // We also create a constructor that accepts the entire item row
             // and does the view lookups to find each subview
@@ -379,6 +389,7 @@ public class PollFragment extends Fragment {
                 mVoterCount = (TextView) itemView.findViewById(R.id.tv_voter_count);
                 mBarCount = (View) itemView.findViewById(R.id.bar_count);
                 mBarFrame = (View) itemView.findViewById(R.id.fl_bar);
+                mLayoutAnswerList = itemView.findViewById(R.id.layout_answer_list);
             }
         }
 
@@ -391,13 +402,14 @@ public class PollFragment extends Fragment {
             View view = inflater.inflate(R.layout.poll_answer_list_item, parent, false);
 
             // Return a new holder instance
-            PollFragment.PollAnswerListAdapter.ViewHolder viewHolder = new PollFragment.PollAnswerListAdapter.ViewHolder(view);
+            final PollFragment.PollAnswerListAdapter.ViewHolder viewHolder = new PollFragment.PollAnswerListAdapter.ViewHolder(view);
+
             return viewHolder;
         }
 
         @Override
-        public void onBindViewHolder(PollAnswerListAdapter.ViewHolder holder, final int position) {
-            PollAnswer answer = mPollAnswers.get(position);
+        public void onBindViewHolder(final PollAnswerListAdapter.ViewHolder holder, final int position) {
+            final PollAnswer answer = mPollAnswers.get(position);
             if (answer == null){
                 return;
             }
@@ -410,12 +422,10 @@ public class PollFragment extends Fragment {
             holder.mAnswerTextView.setText(answer.getAnswer());
             holder.mVoterCount.setText(voterCount + " votes");
 
-            // get the width ref
-            int maxWidth = holder.mBarFrame.getLayoutParams().width;
-            if(maxWidth > 0) {
-                int currentWidth = voterCount / maxWidth;
-                holder.mBarCount.getLayoutParams().width = currentWidth;
-            }
+            // TODO: Make it dynamic width ..
+            int maxWidth = 870;
+            int currentWidth = voterCount * maxWidth / 10;
+            holder.mBarCount.getLayoutParams().width = currentWidth;
 
             if(selectedPosition == position)
                 holder.mAnswerTextView.setTextColor(getResources().getColor(R.color.colorAccent));
