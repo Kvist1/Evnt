@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_item_poll_save"
+        android:orderInCategory="100"
+        android:title="UPDATE"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_item_poll_withdraw"
+        android:orderInCategory="100"
+        android:title="WITHDRAW"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_item_poll_delete"
+        android:orderInCategory="100"
+        android:title="DELETE"
+        app:showAsAction="never"/>
+</menu>

@@ -1,7 +1,9 @@
 package group_8.project_evnt;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -9,14 +11,18 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -36,6 +42,11 @@ import group_8.project_evnt.utils.AppUtils;
  */
 public class AddPollFragment extends DialogFragment implements View.OnClickListener {
 
+    public interface AddPollDialogCloseListener
+    {
+        public void handleDialogClose(DialogInterface dialog);//or whatever args you want
+    }
+
     private static final String ARG_ROOM_ID = "roomid";
     private static final String ARG_POLL_ID = "pollid";
 
@@ -47,6 +58,8 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
     private Button publishButton;
     private EditText etTitle, etQuestion;
     private ImageButton closeButton;
+
+    private boolean editMode;
 
 
 
@@ -143,6 +156,31 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
         etTitle = view.findViewById(R.id.text_input_title);
         etQuestion = view.findViewById(R.id.text_input_question);
 
+        Toolbar toolbar = view.findViewById(R.id.toolbar_add_poll);
+        // Set an OnMenuItemClickListener to handle menu item clicks
+        toolbar.setOnMenuItemClickListener(
+                new Toolbar.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch(item.getItemId()) {
+                            case R.id.menu_item_poll_publish:
+                                publishPoll();
+                                break;
+                        }
+                        // Handle the menu item
+                        return true;
+                    }
+                });
+        // Inflate a menu to be displayed in the toolbar
+
+        if(editMode) {
+            toolbar.inflateMenu(R.menu.menu_edit_poll);
+        } else {
+            toolbar.inflateMenu(R.menu.menu_add_poll);
+        }
+
+
+
         return view;
     }
 
@@ -169,11 +207,11 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
                 break;
 
             case R.id.publish_button:
-                publishPoll(v);
+                publishPoll();
                 break;
 
             case R.id.button_add_poll_dismiss:
-                getActivity().onBackPressed();
+                closeDialog();
                 break;
         }
         
@@ -186,7 +224,14 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
         popup.show();
     }
 
-    private void publishPoll(View v) {
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        inflater.inflate(R.menu.menu_add_poll, menu);
+//        super.onCreateOptionsMenu(menu,inflater);
+//    }
+
+
+    private void publishPoll() {
 
         Toast toast;
         if (etTitle.getText().toString().equals("")) {
@@ -211,13 +256,32 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
             final String userId = AppUtils.getDeviceId(getContext());
             db.createPoll(currentRoomId, title, question, userId, pollAnswers, true);
 
-            getActivity().onBackPressed();
+            closeDialog();
         }
 
         if (toast != null)
             toast.show();
 
 
+    }
+
+    private void closeDialog() {
+        // Check if no view has focus:
+        View view = this.getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
+        getActivity().onBackPressed();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        Activity activity = getActivity();
+        if(activity instanceof AddPollDialogCloseListener) {
+            ((AddPollDialogCloseListener) activity).handleDialogClose(dialog);
+        }
     }
 
     // Create the basic adapter extending from RecyclerView.Adapter
