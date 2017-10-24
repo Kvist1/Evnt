@@ -199,7 +199,7 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
         } else {
             // if successful
             toast = Toast.makeText(getContext(), "The poll has been published :)", Toast.LENGTH_SHORT);
-            // change the button to withdraw
+            // change the button to withdrawge
             publishButton.setText("WITHDRAW");
             publishButton.setBackgroundColor(Color.RED);
 

@@ -41,6 +41,7 @@ import group_8.project_evnt.utils.AppUtils;
 
 import static android.R.attr.maxWidth;
 import static android.R.attr.width;
+import static group_8.project_evnt.R.id.container;
 
 public class PollFragment extends Fragment {
     private String currentRoomId;
@@ -190,11 +191,18 @@ public class PollFragment extends Fragment {
     }
 
     public void showDialog() {
+        String fragmentTag = "ADD_POLL";
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         Bundle args = new Bundle();
         args.putString(ARG_ROOM_ID, currentRoomId);
         AddPollFragment fragment = new AddPollFragment();
         fragment.setArguments(args);
+
+        // Make sure the current transaction finishes first
+        fragmentManager.executePendingTransactions();
+
+        // If there is no fragment yet with this tag...
+        if (fragmentManager.findFragmentByTag(fragmentTag) == null) {
 
 //        if (mIsLargeLayout) {
 //            // The device is using a large layout, so show the fragment as a dialog
@@ -206,9 +214,10 @@ public class PollFragment extends Fragment {
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             // To make it fullscreen, use the 'content' root view as the container
             // for the fragment, which is always the root view for the activity
-            transaction.add(android.R.id.content, fragment)
+            transaction.add(android.R.id.content, fragment, fragmentTag)
                     .addToBackStack(null).commit();
 //        }
+        }
     }
 
     @Override
