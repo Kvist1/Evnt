@@ -169,4 +169,11 @@ public class Database {
         return userId;
     }
 
+    public String unanswerPoll(String roomId, String pollId, String answerId, String userId){
+        DatabaseReference ref = poll(roomId).child(pollId).child("pollAnswers").child(answerId).child("voters");
+        ref.child(userId).setValue(false);
+        return userId;
+    }
+
+
 }

@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class PollAnswer {
     private String answer;
-    private HashMap<String, Object> voters;
+    private HashMap<String, Boolean> voters;
 
     public PollAnswer() {
     }
@@ -19,7 +19,7 @@ public class PollAnswer {
         this.voters = new HashMap<>();
     }
 
-    public PollAnswer(String answer, HashMap<String, Object> voters) {
+    public PollAnswer(String answer, HashMap<String, Boolean> voters) {
         this.answer = answer;
         this.voters = voters;
     }
@@ -32,20 +32,19 @@ public class PollAnswer {
         this.answer = answer;
     }
 
-    public HashMap<String, Object> getVoters() {
+    public HashMap<String, Boolean> getVoters() {
         return voters;
     }
 
-    public void setVoters(HashMap<String, Object> voters) {
+    public void setVoters(HashMap<String, Boolean> voters) {
         this.voters = voters;
     }
 
-    public void addVoter(String userId) {
-        this.voters.put(userId, true);
-    }
-
-    public boolean removeVoter(String userId) {
-        this.voters.remove(userId);
-        return false;
+    public int countVoters() {
+        int count = 0;
+        for (Boolean isVote : voters.values()) {
+            if(isVote) count++;
+        }
+        return count;
     }
 }

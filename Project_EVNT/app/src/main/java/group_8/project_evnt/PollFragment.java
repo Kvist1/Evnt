@@ -3,6 +3,7 @@ package group_8.project_evnt;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -42,6 +44,7 @@ import group_8.project_evnt.utils.AppUtils;
 import static android.R.attr.maxWidth;
 import static android.R.attr.width;
 import static group_8.project_evnt.R.id.container;
+import static group_8.project_evnt.R.id.parent;
 
 public class PollFragment extends Fragment {
     private String currentRoomId;
@@ -295,6 +298,7 @@ public class PollFragment extends Fragment {
             public RecyclerView mPollAnswerRecyclerView;
             public Button mVoteButton;
 
+
             // We also create a constructor that accepts the entire item row
             // and does the view lookups to find each subview
             public ViewHolder(View itemView) {
@@ -308,6 +312,7 @@ public class PollFragment extends Fragment {
                 mVoteButton = (Button) itemView.findViewById(R.id.button_vote);
 
             }
+
         }
 
         @Override
@@ -331,7 +336,7 @@ public class PollFragment extends Fragment {
 
             Log.i("Poll: ", poll.getPollAnswers().toString());
 
-            final PollAnswerListAdapter mPollAnswerListAdapter = new PollAnswerListAdapter(this.mContext, poll.getPollAnswers());
+            final PollAnswerListAdapter mPollAnswerListAdapter = new PollAnswerListAdapter(this.mContext, poll.getPollAnswers(), viewHolder, poll);
             viewHolder.mPollAnswerRecyclerView.setAdapter(mPollAnswerListAdapter);
             viewHolder.mPollAnswerRecyclerView.setHasFixedSize(true);
             LinearLayoutManager layoutManager = new LinearLayoutManager(this.mContext, LinearLayoutManager.VERTICAL, false);
@@ -365,13 +370,18 @@ public class PollFragment extends Fragment {
 
         private ArrayList<PollAnswer> mPollAnswers;
         private Context mContext;
+        private PollFragment.PollListAdapter.ViewHolder mParentViewHolder;
+        private Poll parentPoll;
 
         public int selectedPosition = -1;
+        public int unselectedPosition = -1;
 
         // Pass in the contact array into the constructor
-        public PollAnswerListAdapter(Context context, ArrayList<PollAnswer> pollAnswers) {
+        public PollAnswerListAdapter(Context context, ArrayList<PollAnswer> pollAnswers, PollFragment.PollListAdapter.ViewHolder parentViewHolder, Poll poll) {
             mPollAnswers = pollAnswers;
             mContext = context;
+            mParentViewHolder = parentViewHolder;
+            parentPoll = poll;
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -382,6 +392,7 @@ public class PollFragment extends Fragment {
             public View mBarCount;
             public View mBarFrame;
             public LinearLayout mLayoutAnswerList;
+            public ImageView mIconCheckVote;
 
             public int measuredWidth;
             public int measuredHeight;
@@ -398,6 +409,7 @@ public class PollFragment extends Fragment {
                 mBarCount = (View) itemView.findViewById(R.id.bar_count);
                 mBarFrame = (View) itemView.findViewById(R.id.fl_bar);
                 mLayoutAnswerList = itemView.findViewById(R.id.layout_answer_list);
+                mIconCheckVote = itemView.findViewById(R.id.icon_check_vote);
             }
         }
 
@@ -424,7 +436,7 @@ public class PollFragment extends Fragment {
 
             int voterCount = 0;
             if (answer.getVoters() != null){
-                voterCount = answer.getVoters().size();
+                voterCount = answer.countVoters();
             }
 
             holder.mAnswerTextView.setText(answer.getAnswer());
@@ -435,21 +447,46 @@ public class PollFragment extends Fragment {
             int currentWidth = voterCount * maxWidth / 10;
             holder.mBarCount.getLayoutParams().width = currentWidth;
 
-            if(selectedPosition == position)
+
+            // style changing
+            if (answer.getVoters() != null && answer.getVoters().get(AppUtils.getDeviceId(getContext()))){
                 holder.mAnswerTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-            else if (answer.getVoters() != null){
-                if (answer.getVoters().get(AppUtils.getDeviceId(getContext())) != null){
-                    holder.mAnswerTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-                }
-            } else {
+                holder.mIconCheckVote.setImageResource(R.drawable.check_active);
+            }
+//            else if(selectedPosition == position) {
+//                holder.mAnswerTextView.setTextColor(getResources().getColor(R.color.textBlack));
+//                holder.mIconCheckVote.setImageResource(R.drawable.check_active);
+//                holder.mAnswerTextView.setTypeface(holder.mAnswerTextView.getTypeface(), Typeface.BOLD);
+//            }
+            else {
                 holder.mAnswerTextView.setTextColor(getResources().getColor(R.color.textGray));
+                holder.mIconCheckVote.setImageResource(R.drawable.check_inactive);
+//                holder.mAnswerTextView.setTypeface(holder.mAnswerTextView.getTypeface(), Typeface.NORMAL);
             }
 
-            holder.mAnswerTextView.setOnClickListener(new View.OnClickListener() {
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //if select the one that already voted -> should be deselect?
+//                if (answer.getVoters() != null && answer.getVoters().get(AppUtils.getDeviceId(getContext()))) {
+////                    notifyItemChanged(selectedPosition);
+//                    holder.mAnswerTextView.setTextColor(getResources().getColor(R.color.textGray));
+//                    holder.mAnswerTextView.setTypeface(holder.mAnswerTextView.getTypeface(), Typeface.BOLD);
+//                    holder.mIconCheckVote.setImageResource(R.drawable.check_inactive);
+////                    selectedPosition = position;
+//                    notifyItemChanged(position);
+//                } else {
+//                    notifyItemChanged(selectedPosition);
                     selectedPosition = position;
-                    notifyItemChanged(position);
+//                    notifyItemChanged(position);
+//                }
+
+                    if (answer.getVoters() != null && answer.getVoters().get(AppUtils.getDeviceId(getContext()))) {
+                        Database.getInstance().unanswerPoll(currentRoomId, parentPoll.getKey(), String.valueOf(selectedPosition), AppUtils.getDeviceId(getContext()));
+                    } else {
+                        Database.getInstance().answerPoll(currentRoomId, parentPoll.getKey(), String.valueOf(selectedPosition), AppUtils.getDeviceId(getContext()));
+                    }
                 }
             });
         }

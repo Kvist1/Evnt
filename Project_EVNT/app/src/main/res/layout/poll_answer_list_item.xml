@@ -1,55 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_answer_list"
-    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
     >
-
+    <ImageView
+        android:id="@+id/icon_check_vote"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/check_inactive"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        />
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/layout_answer_list"
+        android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="9"
         >
-        <TextView
-            android:id="@+id/tv_answer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:textColor="@color/textGray"
-            android:textSize="16sp"
-            android:text="aaa"
-            android:layout_weight="1"
-            />
-        <TextView
-            android:id="@+id/tv_voter_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:textColor="@color/textGray"
-            android:textSize="16sp"
-            android:text="dddd"
-            android:layout_marginLeft="8dp"
-            />
-    </LinearLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="13dp">
-        <View
-            android:id="@+id/fl_bar"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/poll_bar"
-            />
-        <View
-            android:id="@+id/bar_count"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/poll_bar_accent"
-            />
-    </FrameLayout>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
+            >
+            <TextView
+                android:id="@+id/tv_answer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:textColor="@color/textGray"
+                android:textSize="16sp"
+                android:text="aaa"
+                android:layout_weight="1"
+                />
+            <TextView
+                android:id="@+id/tv_voter_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:textColor="@color/textGray"
+                android:textSize="16sp"
+                android:text="dddd"
+                android:layout_marginLeft="8dp"
+                />
+        </LinearLayout>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="13dp">
+            <View
+                android:id="@+id/fl_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/poll_bar"
+                />
+            <View
+                android:id="@+id/bar_count"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/poll_bar_accent"
+                />
+        </FrameLayout>
+
+    </LinearLayout>
 </LinearLayout>
