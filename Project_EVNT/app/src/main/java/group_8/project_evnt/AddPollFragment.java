@@ -210,12 +210,12 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
             final String question = etQuestion.getText().toString();
             final String userId = AppUtils.getDeviceId(getContext());
             db.createPoll(currentRoomId, title, question, userId, pollAnswers, true);
+
+            getActivity().onBackPressed();
         }
 
         if (toast != null)
             toast.show();
-
-        getActivity().onBackPressed();
 
 
     }

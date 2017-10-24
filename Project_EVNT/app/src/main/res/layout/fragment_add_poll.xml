@@ -28,6 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:weightSum="1"
                 >
 
                 <ImageButton
@@ -42,7 +43,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ADD NEW POLL"
+                    android:text="New poll"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="32dp"
+                    android:layout_weight=".9"
                     />
 
                 <ImageButton
@@ -50,8 +54,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="10dp"
                     android:background="?android:attr/selectableItemBackground"
                     android:src="@drawable/ic_action_more_vert" />
 
