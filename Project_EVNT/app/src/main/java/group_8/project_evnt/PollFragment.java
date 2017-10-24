@@ -34,6 +34,7 @@ import group_8.project_evnt.core.Database;
 import group_8.project_evnt.models.ChatMessage;
 import group_8.project_evnt.models.Poll;
 import group_8.project_evnt.models.PollAnswer;
+import group_8.project_evnt.models.Room;
 import group_8.project_evnt.utils.AppUtils;
 
 public class PollFragment extends Fragment {
@@ -49,6 +50,9 @@ public class PollFragment extends Fragment {
     private PollFragment.PollListAdapter mPollListAdapter;
 
     private FragmentActivity myContext;
+
+    private boolean isCreator;
+    FloatingActionButton newPollFab;
 
     public PollFragment () {
     }
@@ -70,6 +74,25 @@ public class PollFragment extends Fragment {
         } else {
             return;
         }
+
+        // get room info for check creator
+        final Database db = Database.getInstance();
+        final String userId = AppUtils.getDeviceId(getContext());
+        Log.i("--------currentRoomId: ", currentRoomId);
+        db.findRoomById(currentRoomId, new Database.CreateRoomCallbackInterface() {
+            @Override
+            public void onRoomRetrieved(Room room) {
+                Log.i("--------USERID: ", userId);
+                Log.i("--------USERID; ", room.getCreator());
+                if (room != null) {
+                    isCreator = room.getCreator().equals(userId);
+
+                    if(!isCreator) {
+                        newPollFab.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
 
 
         DatabaseReference poll = Database.getInstance().poll(currentRoomId);
@@ -193,7 +216,7 @@ public class PollFragment extends Fragment {
         // Inflate the layout for this fragment
         mPollListRecycleView = rootView.findViewById(R.id.rv_poll_list);
 
-        FloatingActionButton newPollFab = (FloatingActionButton) rootView.findViewById(R.id.new_poll_fab);
+        newPollFab = (FloatingActionButton) rootView.findViewById(R.id.new_poll_fab);
         final LinearLayout l1 = (LinearLayout) rootView.findViewById(R.id.linear_layout_container);
 
         newPollFab.setOnClickListener(new View.OnClickListener() {
