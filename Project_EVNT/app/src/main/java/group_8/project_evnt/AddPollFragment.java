@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -132,6 +133,7 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
         // remove the dialog title, but you must call the superclass to get the Dialog.
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         return dialog;
     }
 
@@ -189,6 +191,8 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
         // Setup adapter
         // Create adapter passing in the sample user data
         mAddAlternativeAdapter = new AddAlternativeAdapter(this.getActivity(), pollAnswers);
+        // Set maximum pool of recycle view
+        mPollAlternativeRecycleView.getRecycledViewPool().setMaxRecycledViews(0, 0);
         // Attach the adapter to the recyclerview to populate items
         mPollAlternativeRecycleView.setAdapter(mAddAlternativeAdapter);
         // Set layout manager to position the items
