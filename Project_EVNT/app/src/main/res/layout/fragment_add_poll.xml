@@ -1,66 +1,129 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="group_8.project_evnt.AddPollFragment"
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/linear_layout_container"
-    android:orientation="vertical"
-    android:background="@drawable/card_rounded_shape"
-    android:layout_margin="16dp">
+    android:layout_height="match_parent"
+    android:paddingTop="24dp"
+    >
 
-    <android.support.design.widget.CoordinatorLayout
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/appbar_padding_top"
 
-        <ImageButton
-            android:id="@+id/menu_button"
-            android:layout_width="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="enterAlways"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <ImageButton
+                    android:id="@+id/button_add_poll_dismiss"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@android:drawable/ic_menu_close_clear_cancel"
+                    android:background="?android:attr/selectableItemBackground"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ADD NEW POLL"
+                    />
+
+                <ImageButton
+                    android:id="@+id/menu_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="10dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:src="@drawable/ic_action_more_vert" />
+
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context="group_8.project_evnt.AddPollFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/linear_layout_container"
+        android:orientation="vertical"
+        android:background="@drawable/card_rounded_shape"
+        android:paddingTop="80dp"
+        >
+
+        <!--<android.support.design.widget.CoordinatorLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+            <!---->
+            <!--<ImageButton-->
+                <!--android:id="@+id/menu_button"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:src="@drawable/ic_action_more_vert"-->
+                <!--android:layout_gravity="right"-->
+                <!--android:layout_marginRight="5dp"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:background="@color/mainCardColor"/>-->
+
+        <!--</android.support.design.widget.CoordinatorLayout>-->
+        <EditText
+            android:id="@+id/text_input_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_more_vert"
-            android:layout_gravity="right"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/mainCardColor"/>
-
-    </android.support.design.widget.CoordinatorLayout>
-    <EditText
-        android:id="@+id/text_input_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:layout_marginTop="-20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="30dp"
-        android:hint="Title"/>
+            android:inputType="text"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="30dp"
+            android:hint="Title"/>
 
 
 
-    <EditText
-        android:id="@+id/text_input_question"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="30dp"
-        android:hint="Ask a question"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:id="@+id/rv_alternatives"
-        ></android.support.v7.widget.RecyclerView>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/publish_button"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/text_input_question"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="PUBLISH"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"/>
-    </RelativeLayout>
+            android:inputType="text"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="30dp"
+            android:hint="Ask a question"/>
 
-</LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/rv_alternatives"
+            ></android.support.v7.widget.RecyclerView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/publish_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PUBLISH"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

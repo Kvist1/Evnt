@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.franmontiel.fullscreendialog.FullScreenDialogContent;
+import com.franmontiel.fullscreendialog.FullScreenDialogFragment;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -160,6 +163,28 @@ public class PollFragment extends Fragment {
         });
     }
 
+    public void showDialog() {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        Bundle args = new Bundle();
+        args.putString(ARG_ROOM_ID, currentRoomId);
+        AddPollFragment fragment = new AddPollFragment();
+        fragment.setArguments(args);
+
+//        if (mIsLargeLayout) {
+//            // The device is using a large layout, so show the fragment as a dialog
+//            newFragment.show(fragmentManager, "dialog");
+//        } else {
+            // The device is smaller, so show the fragment fullscreen
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            // For a little polish, specify a transition animation
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            // To make it fullscreen, use the 'content' root view as the container
+            // for the fragment, which is always the root view for the activity
+            transaction.add(android.R.id.content, fragment)
+                    .addToBackStack(null).commit();
+//        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -175,16 +200,17 @@ public class PollFragment extends Fragment {
 
         newPollFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                showDialog();
                 // Begin the transaction
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                // Replace the contents of the container with the new fragment
-                Bundle args = new Bundle();
-                args.putString(ARG_ROOM_ID, currentRoomId);
-                AddPollFragment fragment = new AddPollFragment();
-                fragment.setArguments(args);
-                ft.add(R.id.linear_layout_container, fragment);
-                // Complete the changes added above
-                ft.commit();
+//                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+//                // Replace the contents of the container with the new fragment
+//                Bundle args = new Bundle();
+//                args.putString(ARG_ROOM_ID, currentRoomId);
+//                AddPollFragment fragment = new AddPollFragment();
+//                fragment.setArguments(args);
+//                ft.add(R.id.linear_layout_container, fragment);
+//                // Complete the changes added above
+//                ft.commit();
             }
         });
 

@@ -1,8 +1,10 @@
 package group_8.project_evnt;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -14,11 +16,16 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.franmontiel.fullscreendialog.FullScreenDialogContent;
+import com.franmontiel.fullscreendialog.FullScreenDialogController;
+import com.franmontiel.fullscreendialog.FullScreenDialogFragment;
 
 import java.util.ArrayList;
 
@@ -32,7 +39,7 @@ import group_8.project_evnt.utils.AppUtils;
  * Use the {@link AddPollFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddPollFragment extends Fragment implements View.OnClickListener {
+public class AddPollFragment extends DialogFragment implements View.OnClickListener {
 
     private static final String ARG_ROOM_ID = "roomid";
     private static final String ARG_POLL_ID = "pollid";
@@ -44,6 +51,9 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
     private ImageButton menuButton;
     private Button publishButton;
     private EditText etTitle, etQuestion;
+    private ImageButton closeButton;
+
+    private FullScreenDialogController dialogController;
 
 
     private LinearLayoutManager mLinearLayoutManager;
@@ -106,6 +116,18 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
 //        });
     }
 
+    /** The system calls this only when creating the layout in a dialog. */
+//    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // The only reason you might override this method when using onCreateView() is
+        // to modify any dialog characteristics. For example, the dialog includes a
+        // title by default, but your custom layout might not need it. So here you can
+        // remove the dialog title, but you must call the superclass to get the Dialog.
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -119,6 +141,10 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
 
         publishButton = view.findViewById(R.id.publish_button);
         publishButton.setOnClickListener(this);
+
+        menuButton = view.findViewById(R.id.button_add_poll_dismiss);
+        menuButton.setOnClickListener(this);
+
 
         etTitle = view.findViewById(R.id.text_input_title);
         etQuestion = view.findViewById(R.id.text_input_question);
@@ -150,6 +176,10 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
 
             case R.id.publish_button:
                 publishPoll(v);
+                break;
+
+            case R.id.button_add_poll_dismiss:
+                getActivity().onBackPressed();
                 break;
         }
         
@@ -191,7 +221,7 @@ public class AddPollFragment extends Fragment implements View.OnClickListener {
         if (toast != null)
             toast.show();
 
-
+        getActivity().onBackPressed();
 
 
     }
