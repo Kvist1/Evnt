@@ -13,15 +13,19 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationSet;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -43,6 +47,7 @@ import group_8.project_evnt.models.PollAnswer;
 import group_8.project_evnt.models.Room;
 import group_8.project_evnt.utils.AppUtils;
 
+import static android.R.attr.fragment;
 import static android.R.attr.maxWidth;
 import static android.R.attr.width;
 import static group_8.project_evnt.R.id.container;
@@ -62,7 +67,7 @@ public class PollFragment extends Fragment {
 
     private FragmentActivity myContext;
 
-    private boolean isCreator;
+    public boolean isCreator;
     FloatingActionButton newPollFab;
 
     public PollFragment () {
@@ -195,11 +200,15 @@ public class PollFragment extends Fragment {
         });
     }
 
-    public void showDialog() {
+    public void showDialog(String pollId) {
+        Log.d("SHOW DIALOG", pollId != null ? pollId : "New");
         String fragmentTag = "ADD_POLL";
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         Bundle args = new Bundle();
         args.putString(ARG_ROOM_ID, currentRoomId);
+        if(pollId != null) {
+            args.putString(ARG_POLL_ID, pollId);
+        }
         AddPollFragment fragment = new AddPollFragment();
         fragment.setArguments(args);
 
@@ -240,7 +249,7 @@ public class PollFragment extends Fragment {
 
         newPollFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                showDialog();
+                showDialog(null);
                 // Begin the transaction
 //                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
 //                // Replace the contents of the container with the new fragment
@@ -299,6 +308,7 @@ public class PollFragment extends Fragment {
             public TextView mPollQuestionTextView;
             public RecyclerView mPollAnswerRecyclerView;
             public Button mVoteButton;
+            public ImageButton menuButton;
 
 
             // We also create a constructor that accepts the entire item row
@@ -312,7 +322,7 @@ public class PollFragment extends Fragment {
                 mPollQuestionTextView = (TextView) itemView.findViewById(R.id.tv_poll_question);
                 mPollAnswerRecyclerView = (RecyclerView) itemView.findViewById(R.id.rv_poll_answer_list);
                 mVoteButton = (Button) itemView.findViewById(R.id.button_vote);
-
+                menuButton = itemView.findViewById(R.id.menu_button);
             }
 
         }
@@ -359,6 +369,42 @@ public class PollFragment extends Fragment {
             });
 
             setAnimation(viewHolder.itemView, position);
+
+            // hide menu button
+            if (isCreator) {
+                viewHolder.menuButton.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.menuButton.setVisibility(View.GONE);
+            }
+
+            // bind menu button
+            viewHolder.menuButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    showPopup(view);
+                }
+
+                public void showPopup(View v) {
+                    PopupMenu popup = new PopupMenu(getContext(), v);
+                    MenuInflater inflater = popup.getMenuInflater();
+                    inflater.inflate(R.menu.menu_poll_card, popup.getMenu());
+
+                    // add listener
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch(item.getItemId()) {
+                                case R.id.menu_item_edit:
+                                    showDialog(poll.getKey());
+                                    break;
+                            }
+                            return false;
+                        }
+                    });
+
+                    popup.show();
+                }
+            });
 
         }
 

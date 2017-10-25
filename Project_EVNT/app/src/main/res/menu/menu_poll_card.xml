@@ -7,8 +7,8 @@
         android:title="EDIT"
         app:showAsAction="never" />
     <item
-        android:id="@+id/menu_item_delete"
+        android:id="@+id/menu_item_withdraw"
         android:orderInCategory="100"
-        android:title="DELETE"
+        android:title="WITHDRAW"
         app:showAsAction="never"/>
 </menu>

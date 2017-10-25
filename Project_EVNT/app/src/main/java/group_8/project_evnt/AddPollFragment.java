@@ -29,9 +29,17 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 import group_8.project_evnt.core.Database;
+import group_8.project_evnt.models.Poll;
+import group_8.project_evnt.models.PollAlternative;
 import group_8.project_evnt.models.PollAnswer;
 import group_8.project_evnt.utils.AppUtils;
 
@@ -60,7 +68,9 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
     private EditText etTitle, etQuestion;
     private ImageButton closeButton;
 
+    private String pollId;
     private boolean editMode;
+    private Poll editPoll;
 
 
 
@@ -92,6 +102,10 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
 
         if (getArguments() != null) {
             currentRoomId = getArguments().getString(ARG_ROOM_ID);
+            pollId = getArguments().getString(ARG_POLL_ID);
+            if(pollId != null) {
+                editMode = true;
+            }
         } else {
             return;
         }
@@ -100,28 +114,10 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
         pollAnswers.add(new PollAnswer());
         //mAddAlternativeAdapter.notifyDataSetChanged();
 
-//        DatabaseReference poll = Database.getInstance().poll(currentPollId);
-//        poll.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                pollAnswers.clear();
-//                for (DataSnapshot alternative : dataSnapshot.getChildren()){
-//                    Log.d("Data", alternative.toString());
-//                    pollAnswers.add(alternative.getValue(PollAlternative.class));
-//                }
-//                if(mAddAlternativeAdapter != null) {
-//                    mAddAlternativeAdapter.notifyDataSetChanged();
-//                }
-//                if(mLinearLayoutManager != null) {
-//                    mLinearLayoutManager.scrollToPosition(pollAnswers.size() - 1);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
+    }
+
+    public void setPoll(Poll poll) {
+        this.editPoll = poll;
     }
 
     /** The system calls this only when creating the layout in a dialog. */
@@ -177,6 +173,23 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
 
         if(editMode) {
             toolbar.inflateMenu(R.menu.menu_edit_poll);
+
+            DatabaseReference poll = Database.getInstance().poll(currentRoomId).child(pollId);
+            poll.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.d("Data", dataSnapshot.getValue().toString());
+                    Poll poll = dataSnapshot.getValue(Poll.class);
+                    poll.setKey(dataSnapshot.getKey());
+                    setPoll(poll);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
         } else {
             toolbar.inflateMenu(R.menu.menu_add_poll);
         }
