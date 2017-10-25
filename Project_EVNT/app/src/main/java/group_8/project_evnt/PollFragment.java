@@ -217,11 +217,6 @@ public class PollFragment extends Fragment {
 
         // If there is no fragment yet with this tag...
         if (fragmentManager.findFragmentByTag(fragmentTag) == null) {
-
-//        if (mIsLargeLayout) {
-//            // The device is using a large layout, so show the fragment as a dialog
-//            newFragment.show(fragmentManager, "dialog");
-//        } else {
             // The device is smaller, so show the fragment fullscreen
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             // For a little polish, specify a transition animation
@@ -250,16 +245,6 @@ public class PollFragment extends Fragment {
         newPollFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 showDialog(null);
-                // Begin the transaction
-//                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-//                // Replace the contents of the container with the new fragment
-//                Bundle args = new Bundle();
-//                args.putString(ARG_ROOM_ID, currentRoomId);
-//                AddPollFragment fragment = new AddPollFragment();
-//                fragment.setArguments(args);
-//                ft.add(R.id.linear_layout_container, fragment);
-//                // Complete the changes added above
-//                ft.commit();
             }
         });
 
@@ -394,9 +379,11 @@ public class PollFragment extends Fragment {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             switch(item.getItemId()) {
-                                case R.id.menu_item_edit:
+                                case R.id.menu_item_poll_edit:
                                     showDialog(poll.getKey());
                                     break;
+                                case R.id.menu_item_poll_delete:
+                                    deletePoll(poll.getKey());
                             }
                             return false;
                         }
@@ -406,6 +393,10 @@ public class PollFragment extends Fragment {
                 }
             });
 
+        }
+
+        private void deletePoll(String pollId){
+            Database.getInstance().deletePoll(currentRoomId, pollId);
         }
 
         @Override

@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_item_edit"
+        android:id="@+id/menu_item_poll_edit"
         android:orderInCategory="100"
         android:title="EDIT"
         app:showAsAction="never" />
     <item
-        android:id="@+id/menu_item_withdraw"
+        android:id="@+id/menu_item_poll_delete"
         android:orderInCategory="100"
-        android:title="WITHDRAW"
+        android:title="DELETE"
         app:showAsAction="never"/>
 </menu>
