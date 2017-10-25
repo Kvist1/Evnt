@@ -67,6 +67,7 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
     private Button publishButton;
     private EditText etTitle, etQuestion;
     private ImageButton closeButton;
+    private Toolbar toolbar;
 
     private String pollId;
     private boolean editMode;
@@ -88,9 +89,10 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
      * @return A new instance of fragment AddPollFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddPollFragment newInstance(String pollId) {
+    public static AddPollFragment newInstance(String roomId, String pollId) {
         AddPollFragment fragment = new AddPollFragment();
         Bundle args = new Bundle();
+        args.putString(ARG_ROOM_ID, roomId);
         args.putString(ARG_POLL_ID, pollId);
         fragment.setArguments(args);
         return fragment;
@@ -112,12 +114,23 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
 
 
         pollAnswers.add(new PollAnswer());
-        //mAddAlternativeAdapter.notifyDataSetChanged();
 
     }
 
     public void setPoll(Poll poll) {
-        this.editPoll = poll;
+        editPoll = poll;
+
+        pollAnswers.clear();
+        for (PollAnswer answer : editPoll.getPollAnswers()){
+            pollAnswers.add(answer);
+        }
+
+        pollAnswers.add(new PollAnswer());
+        mAddAlternativeAdapter.notifyDataSetChanged();
+
+        etTitle.setText(editPoll.getTitle());
+        etQuestion.setText(editPoll.getQuestion());
+
     }
 
     /** The system calls this only when creating the layout in a dialog. */
@@ -151,7 +164,7 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
         etTitle = view.findViewById(R.id.text_input_title);
         etQuestion = view.findViewById(R.id.text_input_question);
 
-        Toolbar toolbar = view.findViewById(R.id.toolbar_add_poll);
+        toolbar = view.findViewById(R.id.toolbar_add_poll);
         // Set an OnMenuItemClickListener to handle menu item clicks
         toolbar.setOnMenuItemClickListener(
                 new Toolbar.OnMenuItemClickListener() {
@@ -161,12 +174,33 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
                             case R.id.menu_item_poll_publish:
                                 publishPoll();
                                 break;
+                            case R.id.menu_item_poll_save:
+                                publishPoll();
+                                break;
                         }
+
                         // Handle the menu item
                         return true;
                     }
                 });
-        // Inflate a menu to be displayed in the toolbar
+
+
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        // Setup adapter
+        // Create adapter passing in the sample user data
+        mAddAlternativeAdapter = new AddAlternativeAdapter(this.getActivity(), pollAnswers);
+        // Set maximum pool of recycle view
+        mPollAlternativeRecycleView.getRecycledViewPool().setMaxRecycledViews(0, 0);
+        // Attach the adapter to the recyclerview to populate items
+        mPollAlternativeRecycleView.setAdapter(mAddAlternativeAdapter);
+        // Set layout manager to position the items
+        mLinearLayoutManager = new LinearLayoutManager(this.getActivity());
+        mPollAlternativeRecycleView.setLayoutManager(mLinearLayoutManager);
 
         if(editMode) {
             toolbar.inflateMenu(R.menu.menu_edit_poll);
@@ -191,24 +225,6 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
             toolbar.inflateMenu(R.menu.menu_add_poll);
         }
 
-
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        // Setup adapter
-        // Create adapter passing in the sample user data
-        mAddAlternativeAdapter = new AddAlternativeAdapter(this.getActivity(), pollAnswers);
-        // Set maximum pool of recycle view
-        mPollAlternativeRecycleView.getRecycledViewPool().setMaxRecycledViews(0, 0);
-        // Attach the adapter to the recyclerview to populate items
-        mPollAlternativeRecycleView.setAdapter(mAddAlternativeAdapter);
-        // Set layout manager to position the items
-        mLinearLayoutManager = new LinearLayoutManager(this.getActivity());
-        mPollAlternativeRecycleView.setLayoutManager(mLinearLayoutManager);
-
     }
 
     @Override
@@ -225,7 +241,6 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
         }
         
     }
-
 
     private void publishPoll() {
 
@@ -250,8 +265,13 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
             final String title = etTitle.getText().toString();
             final String question = etQuestion.getText().toString();
             final String userId = AppUtils.getDeviceId(getContext());
-            db.createPoll(currentRoomId, title, question, userId, pollAnswers, true);
 
+            if (editMode){
+                editPoll.setPollAnswers(pollAnswers);
+                db.updatePoll(currentRoomId, pollId, editPoll);
+            } else {
+                db.createPoll(currentRoomId, title, question, userId, pollAnswers, true);
+            }
             closeDialog();
         }
 
