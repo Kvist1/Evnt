@@ -94,12 +94,9 @@ public class PollFragment extends Fragment {
         // get room info for check creator
         final Database db = Database.getInstance();
         final String userId = AppUtils.getDeviceId(getContext());
-        Log.i("--------currentRoomId: ", currentRoomId);
         db.findRoomById(currentRoomId, new Database.CreateRoomCallbackInterface() {
             @Override
             public void onRoomRetrieved(Room room) {
-                Log.i("--------USERID: ", userId);
-                Log.i("--------USERID; ", room.getCreator());
                 if (room != null) {
                     isCreator = room.getCreator().equals(userId);
 
@@ -136,7 +133,6 @@ public class PollFragment extends Fragment {
         poll.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.i("CHILD ADDED: ", dataSnapshot.toString());
                 Poll poll = dataSnapshot.getValue(Poll.class);
                 poll.setKey(dataSnapshot.getKey());
                 if (poll.isLive()){
@@ -168,7 +164,6 @@ public class PollFragment extends Fragment {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.i("CHILD REMOVED: ", dataSnapshot.toString());
                 Poll poll = dataSnapshot.getValue(Poll.class);
                 poll.setKey(dataSnapshot.getKey());
 
@@ -190,18 +185,17 @@ public class PollFragment extends Fragment {
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                Log.i("CHILD MOVED: ", dataSnapshot.toString());
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.i("CHILD CANCELED: ", databaseError.toString());
+
             }
         });
     }
 
     public void showDialog(String pollId) {
-        Log.d("SHOW DIALOG", pollId != null ? pollId : "New");
         String fragmentTag = "ADD_POLL";
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         Bundle args = new Bundle();
@@ -330,8 +324,6 @@ public class PollFragment extends Fragment {
         public void onBindViewHolder(PollFragment.PollListAdapter.ViewHolder viewHolder, final int position) {
             // Get the data model based on position
             final Poll poll = mPolls.get(position);
-
-            Log.i("Poll: ", poll.getPollAnswers().toString());
 
             final PollAnswerListAdapter mPollAnswerListAdapter = new PollAnswerListAdapter(this.mContext, poll.getPollAnswers(), viewHolder, poll);
             viewHolder.mPollAnswerRecyclerView.setAdapter(mPollAnswerListAdapter);

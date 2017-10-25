@@ -5,7 +5,8 @@
         android:id="@+id/menu_item_poll_edit"
         android:orderInCategory="100"
         android:title="EDIT"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:visible="false"/>
     <item
         android:id="@+id/menu_item_poll_delete"
         android:orderInCategory="100"

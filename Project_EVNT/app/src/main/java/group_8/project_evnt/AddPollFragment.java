@@ -141,9 +141,6 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
 
         mPollAlternativeRecycleView = view.findViewById(R.id.rv_alternatives);
 
-        menuButton = view.findViewById(R.id.menu_button);
-        menuButton.setOnClickListener(this);
-
         publishButton = view.findViewById(R.id.publish_button);
         publishButton.setOnClickListener(this);
 
@@ -218,11 +215,6 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
     public void onClick(View v) {
 
         switch(v.getId()) {
-
-            case R.id.menu_button:
-                showPopup(v);
-                break;
-
             case R.id.publish_button:
                 publishPoll();
                 break;
@@ -233,19 +225,6 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
         }
         
     }
-
-    public void showPopup(View v) {
-        PopupMenu popup = new PopupMenu(getContext(), v);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_poll_card, popup.getMenu());
-        popup.show();
-    }
-
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.menu_add_poll, menu);
-//        super.onCreateOptionsMenu(menu,inflater);
-//    }
 
 
     private void publishPoll() {
