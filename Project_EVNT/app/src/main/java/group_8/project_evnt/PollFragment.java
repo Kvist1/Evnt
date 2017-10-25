@@ -19,6 +19,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationSet;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -275,7 +277,7 @@ public class PollFragment extends Fragment {
 
         private ArrayList<Poll> mPolls;
         private Context mContext;
-//        private PollAnswerListAdapter mPollAnswerListAdapter;
+        private int lastPosition = -1;
 
         // Pass in the contact array into the constructor
         public PollListAdapter(Context context, ArrayList<Poll> polls) {
@@ -356,11 +358,26 @@ public class PollFragment extends Fragment {
                 }
             });
 
+            setAnimation(viewHolder.itemView, position);
+
         }
 
         @Override
         public int getItemCount() {
             return mPolls.size();
+        }
+
+        private void setAnimation(View view, int position){
+            if (position > lastPosition) {
+                AnimationSet anims = new AnimationSet(false);
+
+                AlphaAnimation fade = new AlphaAnimation(0.0f, 1.0f);
+                fade.setDuration(200);
+                anims.addAnimation(fade);
+
+                view.startAnimation(anims);
+                lastPosition = position;
+            }
         }
 
     }
@@ -455,34 +472,18 @@ public class PollFragment extends Fragment {
                 holder.mAnswerTextView.setTextColor(getResources().getColor(R.color.colorAccent));
                 holder.mIconCheckVote.setImageResource(R.drawable.check_active);
             }
-//            else if(selectedPosition == position) {
-//                holder.mAnswerTextView.setTextColor(getResources().getColor(R.color.textBlack));
-//                holder.mIconCheckVote.setImageResource(R.drawable.check_active);
-//                holder.mAnswerTextView.setTypeface(holder.mAnswerTextView.getTypeface(), Typeface.BOLD);
-//            }
+
             else {
                 holder.mAnswerTextView.setTextColor(getResources().getColor(R.color.textGray));
                 holder.mIconCheckVote.setImageResource(R.drawable.check_inactive);
-//                holder.mAnswerTextView.setTypeface(holder.mAnswerTextView.getTypeface(), Typeface.NORMAL);
             }
 
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //if select the one that already voted -> should be deselect?
-//                if (answer.getVoters() != null && answer.getVoters().get(AppUtils.getDeviceId(getContext()))) {
-////                    notifyItemChanged(selectedPosition);
-//                    holder.mAnswerTextView.setTextColor(getResources().getColor(R.color.textGray));
-//                    holder.mAnswerTextView.setTypeface(holder.mAnswerTextView.getTypeface(), Typeface.BOLD);
-//                    holder.mIconCheckVote.setImageResource(R.drawable.check_inactive);
-////                    selectedPosition = position;
-//                    notifyItemChanged(position);
-//                } else {
-//                    notifyItemChanged(selectedPosition);
                     selectedPosition = position;
-//                    notifyItemChanged(position);
-//                }
+
 
                     if (answer.getVoters() != null
                             && answer.getVoters().get(AppUtils.getDeviceId(getContext())) != null

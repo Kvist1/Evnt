@@ -247,7 +247,7 @@ public class AddPollFragment extends DialogFragment implements View.OnClickListe
             toast = Toast.makeText(getContext(), "Enter at least two alternatives", Toast.LENGTH_SHORT);
         } else {
             // if successful
-            toast = Toast.makeText(getContext(), "The poll has been published :)", Toast.LENGTH_SHORT);
+            toast = Toast.makeText(getContext(), "Your poll has been published", Toast.LENGTH_SHORT);
             // change the button to withdrawge
             publishButton.setText("WITHDRAW");
             publishButton.setBackgroundColor(Color.RED);
