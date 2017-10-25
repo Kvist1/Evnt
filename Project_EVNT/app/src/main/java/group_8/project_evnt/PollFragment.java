@@ -204,13 +204,7 @@ public class PollFragment extends Fragment {
         Log.d("SHOW DIALOG", pollId != null ? pollId : "New");
         String fragmentTag = "ADD_POLL";
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        Bundle args = new Bundle();
-        args.putString(ARG_ROOM_ID, currentRoomId);
-        if(pollId != null) {
-            args.putString(ARG_POLL_ID, pollId);
-        }
-        AddPollFragment fragment = new AddPollFragment();
-        fragment.setArguments(args);
+        AddPollFragment fragment = AddPollFragment.newInstance(currentRoomId, pollId);
 
         // Make sure the current transaction finishes first
         fragmentManager.executePendingTransactions();
