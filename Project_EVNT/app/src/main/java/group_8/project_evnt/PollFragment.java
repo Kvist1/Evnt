@@ -109,26 +109,6 @@ public class PollFragment extends Fragment {
 
 
         DatabaseReference poll = Database.getInstance().poll(currentRoomId);
-        poll.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                polls.clear();
-                for (DataSnapshot p : dataSnapshot.getChildren()){
-                    Poll poll = p.getValue(Poll.class);
-                    poll.setKey(p.getKey());
-                    polls.add(poll);
-                }
-
-                if (mPollListAdapter != null){
-                    mPollListAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
         poll.addChildEventListener(new ChildEventListener() {
             @Override
